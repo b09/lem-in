@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/13 23:08:55 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/14 11:41:53 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,7 @@ int				validate_string_list(char *str)
 		// coordinates will be digits after room name: name coord_x coord_y
 		if (spaces > 0 && !ft_isdigit(str[i]))
 		{
+			printf("line:%d\n", __LINE__);
 			ft_putstr_fd("Error, coordinate is not a digit\n", 0);
 			return (0);
 		}
