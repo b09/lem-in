@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/14 11:41:53 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/14 20:57:26 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ main
 */
 
 t_room			*get_address_of_room_by_name(char *str, t_obj *obj);
-void			create_t_link_node(t_room *link, t_room *room);
+void			create_t_link_node(t_room *link, t_room *room, char repeat);
 int				assign_links_to_rooms(t_obj *obj);
 int				validate_link(char *str);
 int				validate_rooms_from_string(t_obj *obj);
@@ -35,10 +35,7 @@ int				validate_comment(char *str);
 int				validate_string_list(char *str);
 int				create_room_node(t_obj *obj, int code);
 int				assign_input_to_obj(t_obj *obj);
-
-
-
-
+void			populate_beginning_links_to_string_list(t_str *beginning_links, t_obj *obj); // make sure all lnkd_lists have members correctly assigned
 
 
 int				main(void)
@@ -55,6 +52,7 @@ int				main(void)
 	// print_string_input(&obj);
 	obj.string_list = obj.string_list->beginning;
 	assign_input_to_obj(&obj);
+	print_rooms(&obj);
 	assign_links_to_rooms(&obj);
 	print_links(&obj);
 
@@ -78,24 +76,28 @@ t_room			*get_address_of_room_by_name(char *str, t_obj *obj)
 	t_room		*temp;
 	
 	temp = CSTART;
-	while (temp && temp->next != NULL)
+	while (temp)
 	{
 		if (!ft_memcmp(temp->name, str, ft_strlen(temp->name)))
 			return (temp);
+		temp = temp->next;
 	}
 	return (NULL);
 }
 
 
-void			create_t_link_node(t_room *link, t_room *room)
+void			create_t_link_node(t_room *link, t_room *room, char repeat)
 {
 	t_links		*new_node;
 
+	if (link == room)
+		return ;
 	new_node = ft_memalloc(sizeof(t_links));
 	new_node->room = link;
 	new_node->next = NULL;
-	if (room->links != NULL)
+	if (room->links == NULL)
 	{
+		room->links = new_node;
 		room->links->start = new_node;
 		room->links->current = new_node;
 	}
@@ -104,35 +106,10 @@ void			create_t_link_node(t_room *link, t_room *room)
 		room->links->current->next = new_node;
 		room->links->current = new_node;
 	}
+	if (repeat)
+		create_t_link_node(room, link, 0);
 }
 
-int				assign_links_to_rooms(t_obj *obj)
-{
-	while (STR_L && STR_L->next != NULL && validate_link(STR))
-		STR_L = STR_L->next;
-	if (STR_L->next != NULL && !validate_link(STR))
-		return (0);
-	CCURRENT = CSTART;
-	while (CCURRENT != NULL)
-	{
-		STR_L = STR_L->beginning_links;
-		while (STR_L && STR_L->next != NULL)
-		{
-			if (ft_strnstr(STR, CCURRENT->name, ft_strlen(STR)))
-			{
-				// go one char beyond '-' in STR to get name of
-				// room being linked to.
-				t_room *temp = get_address_of_room_by_name(ft_strchr(STR, '-') + 1, obj);
-				create_t_link_node(temp, CCURRENT);
-				// create t_links node with address returned from
-				// get_address_of_room_by_name().
-			}
-			STR_L = STR_L->next;
-		}
-		CCURRENT = CCURRENT->next;
-	}
-	return (1);
-}
 
 /*
 	iterate thru string list starting from string that
@@ -147,7 +124,7 @@ int				validate_link(char *str)
 	dash = 0;
 	while (str[i])
 	{
-		if ((!ft_isprint(str[i]) && str[i] != '-') || (i == 0 && str[i] == '-'))
+		if ((!ft_isprint(str[i]) && str[i] != '-' && str[i] != '\n') || (i == 0 && str[i] == '-'))
 			return (0);
 		if (str[i] == '-')
 			++dash;
@@ -156,33 +133,6 @@ int				validate_link(char *str)
 	if (dash > 1)
 		return (0);
 	return (5);
-}
-
-
-int				validate_rooms_from_string(t_obj *obj)
-{
-	int			i;
-	int			spaces;
-
-	i = 0;
-	spaces = 0;
-	while (STR[i])
-	{
-		// check if everything is a printable char, and not ' ' as first character
-		if (STR[i] != '\n' && (!ft_isprint(STR[i]) || (i == 0 && STR[i] == ' ')))
-			return (0);
-
-		if (STR[i] == '#' && i == 0)
-			return (validate_comment(STR));
-
-			// only two spaces should exist per line
-		if (STR[i] == ' ')
-		{
-			++spaces;
-			++i;
-		}
-	}
-	return (1);
 }
 
 // check strings with first character '#', which could be command or comment
@@ -232,9 +182,8 @@ int				validate_string_list(char *str)
 			++i;
 		}
 		// coordinates will be digits after room name: name coord_x coord_y
-		if (spaces > 0 && !ft_isdigit(str[i]))
+		if (spaces > 0 && !ft_isdigit(str[i]) && str[i] != '\n')
 		{
-			printf("line:%d\n", __LINE__);
 			ft_putstr_fd("Error, coordinate is not a digit\n", 0);
 			return (0);
 		}
@@ -264,13 +213,12 @@ int				create_room_node(t_obj *obj, int code)
 	t_room		*temp;
 	int			i;
 
-	printf("inside %s\n", __func__);
 	i = 0;
 	temp = ft_memalloc(sizeof(t_room));
 	while (STR[i] && STR[i] != ' ')
 		++i;
 	temp->name = ft_strnew(i);
-	temp->name = ft_memcpy(temp->next, STR, i);
+	temp->name = ft_memcpy(temp->name, STR, i);
 	i += STR[i] == ' ' ? 1 : 0; // for space in string
 	temp->coord_x = ft_atoi(&STR[i]);
 	while (STR[i] && ft_isdigit(STR[i]))
@@ -279,7 +227,6 @@ int				create_room_node(t_obj *obj, int code)
 	temp->coord_y = ft_atoi(&STR[i]);
 	temp->next = NULL;
 	temp->previous = NULL;
-	
 	if (CSTART == NULL)
 	{
 		CSTART = temp;
@@ -287,8 +234,8 @@ int				create_room_node(t_obj *obj, int code)
 	}
 	else
 	{
-		temp->previous = CCURRENT;
-		CCURRENT->next = temp;
+		CEND->next = temp;
+		temp->previous = CEND;
 	}
 	if (code == 2)
 		START_RM = CCURRENT;
@@ -298,10 +245,41 @@ int				create_room_node(t_obj *obj, int code)
 	return (1);
 }
 
+int				assign_links_to_rooms(t_obj *obj)
+{
+	t_str 		*copy;
+	t_room 		*temp;
+	while (STR_L && STR_L->next != NULL && validate_link(STR))
+		STR_L = STR_L->next;
+	if (STR_L->next != NULL && !validate_link(STR))
+		return (0);
+	CCURRENT = CSTART;
+	while (CCURRENT != NULL)
+	{
+		STR_L = STR_L->beginning_links;
+		while (STR_L)
+		{
+			if (ft_strnstr(STR, CCURRENT->name, ft_strlen(STR)))
+			{
+				// go one char beyond '-' in STR to get name of
+				// room being linked to.
+				temp = get_address_of_room_by_name(ft_strchr(STR, '-') + 1, obj);
+				// if (temp != CCURRENT)
+					create_t_link_node(temp, CCURRENT, 1);
+				// create t_links node with address returned from
+				// get_address_of_room_by_name().
+			}
+			if (STR_L->next != NULL)
+				copy = STR_L;
+			STR_L = STR_L->next;
+		}
+		STR_L = copy;
+		CCURRENT = CCURRENT->next;
+	}
+	return (1);
+}
 
-
-
-int				assign_input_to_obj(t_obj *obj)
+int				check_first_line(t_obj *obj)
 {
 	int			i;
 
@@ -317,14 +295,22 @@ int				assign_input_to_obj(t_obj *obj)
 	}
 	ANTS = ft_atoi(STR);
 	STR_L = STR_L->next;
+	return (1);
+}
 
+int				assign_input_to_obj(t_obj *obj)
+{
+	int			i;
+
+	i = 0;
+	if (!check_first_line(obj))
+		return (0);
 	// continue checking next lines
 	while (STR_L && STR_L->next != NULL)
 	{
 		i = validate_string_list(STR);
 		// move to next string if current line is ##start or ##end
 		// must check current newline in validate_string_list()
-		printf("i is:%d str:%s\n", i, STR);
 		if (i == 1)
 			create_room_node(obj, i);
 		else if (i == 2 || i == 3)
@@ -334,14 +320,13 @@ int				assign_input_to_obj(t_obj *obj)
 				create_room_node(obj, i);
 			else
 			{
-			printf("yo:%d %d\n", __LINE__, validate_string_list(STR));
 				// delete_lnkd_list(obj); have to write this
 				return (0);
 			}
 		}
-		else if (i == 4)
+		else if (i == 5)
 		{
-			STR_L->beginning_links = STR_L;
+			populate_beginning_links_to_string_list(STR_L, obj);
 			return (1);
 		}
 		else if (i == 0)
@@ -353,6 +338,19 @@ int				assign_input_to_obj(t_obj *obj)
 		STR_L = STR_L->next;
 	}
 	return (1);
+}
+
+void			populate_beginning_links_to_string_list(t_str *beginning_links, t_obj *obj) // make sure all lnkd_lists have members correctly assigned
+{
+	STR_L = STR_L->beginning;
+	// printf("inside populate() var beginning_list:%p, STR:%p\n", beginning_links, STR_L);
+	while (STR_L && STR_L->next != NULL)
+	{
+		STR_L->beginning_links = beginning_links;
+		STR_L = STR_L->next;
+	}
+	STR_L->beginning_links = beginning_links;
+	STR_L = STR_L->beginning;
 }
 /*
 	i = validate_string()

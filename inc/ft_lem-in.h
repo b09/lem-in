@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/04/13 22:24:03 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/14 20:47:02 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ typedef struct		s_obj
 }					t_obj;
 
 t_room			*get_address_of_room_by_name(char *str, t_obj *obj);
-void			create_t_link_node(t_room *link, t_room *room);
+void			create_t_link_node(t_room *link, t_room *room, char repeat);
 int				assign_links_to_rooms(t_obj *obj);
 int				validate_link(char *str);
 int				validate_rooms_from_string(t_obj *obj);
@@ -84,6 +84,8 @@ void			delete_string_list(t_obj *obj, t_str **list);
 void			copy_string_input(t_obj *obj);
 void			print_string_input(t_obj *obj);
 void			print_links(t_obj *obj);
+void			print_rooms(t_obj *obj);
+
 
 
 #endif
