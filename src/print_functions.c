@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   create_and_delete_functions.c                      :+:    :+:            */
+/*   print_functions.c                                  :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/14 20:48:55 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/15 16:10:14 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_lem-in.h"
 
-void			delete_string_list(t_obj *obj, t_str **list)
+void			delete_string_lst(t_obj *obj, t_str **list)
 {
 	if (*list != NULL)
 	{
 		if ((*list)->next)
-			delete_string_list(obj, &(*list)->next);
+			delete_string_lst(obj, &(*list)->next);
 		ft_memdel((void*)&(*list)->str);
 		ft_memdel((void*)&(*list));
 		*list = NULL;
@@ -25,55 +25,23 @@ void			delete_string_list(t_obj *obj, t_str **list)
 }
 
 
-
-
-void			copy_string_input(t_obj *obj)
-{
-	char		*str;
-	t_str		*temp;
-
-	temp = NULL;
-	// every call to gnl() will change str's address
-	// but each node will have a copy of every new
-	// address that str has changed to
-	gnl_with_newline(0, &str);
-	if (str)
-	{
-		STR_L = malloc(sizeof(t_str));
-		STR_L->str = str;
-		STR_L->beginning = STR_L;
-		STR_L->next = NULL;
-		while (gnl_with_newline(0, &str) > 0)
-		{
-			temp = malloc(sizeof(t_str));
-			temp->str = str;
-			temp->beginning = STR_L->beginning;
-			temp->next = NULL;
-			STR_L->next = temp;
-			STR_L = temp;
-		}
-		STR_L = STR_L->beginning;
-	}
-}
-
 // using printf to print to screen
-void			print_string_input(t_obj *obj)
+void			print_tstr_lst(t_obj *obj)
 {
 	printf("%s()\n", __func__);
-	if (STR_L != NULL)
+	if (TSTR_L != NULL)
 	{
-		while (STR_L->next != NULL)
+		while (TSTR_L->next != NULL)
 		{
-			printf("addr:%p beginning:%p string:%s", STR_L, STR_L->beginning, (STR_L->str));
-			STR_L = STR_L->next;
+			printf("addr:%p beginning:%p string:%s", TSTR_L, TSTR_L->beginning, (TSTR_L->str));
+			TSTR_L = TSTR_L->next;
 		}
-			printf("addr:%p beginning:%p string:%s\n", STR_L, STR_L->beginning, (STR_L->str));
-		STR_L = STR_L->beginning;
+			printf("addr:%p beginning:%p string:%s\n\n", TSTR_L, TSTR_L->beginning, (TSTR_L->str));
+		TSTR_L = TSTR_L->beginning;
 	}
-	printf("STR_L:%p\n", STR_L);
 }
 
-void			print_rooms(t_obj *obj)
+void			print_troom_lst(t_obj *obj)
 {
 	CCURRENT = CSTART;
 	printf("%s()\n", __func__);
@@ -83,9 +51,10 @@ void			print_rooms(t_obj *obj)
 		printf("CCURRENT:%p, name:%s, coord_x:%d, coord_y:%d\n", CCURRENT, CCURRENT->name, CCURRENT->coord_x, CCURRENT->coord_y);
 		CCURRENT = CCURRENT->next;
 	}
+	printf("\n");
 }
 
-void			print_links(t_obj *obj)
+void			print_tlink_lst(t_obj *obj)
 {
 	printf("%s()\n", __func__);
 	// obj->chain_current = obj->chain_start;
@@ -103,7 +72,7 @@ void			print_links(t_obj *obj)
 				printf("Room: %s links to: %s\n", CCURRENT->name, CCURRENT->links->room->name);
 				CCURRENT->links = CCURRENT->links->next;
 			}
-				printf("Room: %s links to: %s\n", CCURRENT->name, CCURRENT->links->room->name);
+				printf("Room: %s links to: %s\n\n", CCURRENT->name, CCURRENT->links->room->name);
 		}
 		CCURRENT = CCURRENT->next;
 	}

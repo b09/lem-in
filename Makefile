@@ -6,14 +6,16 @@
 #    By: bprado <bprado@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/06/03 16:52:44 by bprado        #+#    #+#                  #
-#    Updated: 2020/04/12 16:50:26 by macbook       ########   odam.nl          #
+#    Updated: 2020/04/15 14:25:19 by macbook       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= lem-in
 CFLAGS		= -Wall -Wextra -Werror
 SRC 		=	src/lem-in.c \
-				src/create_and_delete_functions.c
+				src/print_functions.c \
+				src/create_lnkd_lists.c \
+				src/validate_functions.c
 LIB 		= ./libft
 LIB_A		= ./libft/libft.a
 INC 		= -I inc -I libft/inc
