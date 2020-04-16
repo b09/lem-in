@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/09 12:48:31 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/09 14:03:05 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/16 15:11:35 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ static int		join_and_return(char **line, char **str, char **h, char buf[])
 	(!*str) ? ft_strdel(&*h) : h;
 	if (!*str)
 		return (1);
-
-	temp = ft_strndup(buf, ft_strchr_int(buf, '\n'));
+	temp = ft_strndup(buf, ft_strchr_int(buf, '\n') + 1);
 	*line = ft_strjoin(*h, temp);
 	temp ? ft_strdel(&temp) : temp;
 	(*h) ? ft_strdel(&*h) : h;

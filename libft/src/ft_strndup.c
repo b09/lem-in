@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/09 12:43:45 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/09 14:03:56 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/16 15:10:16 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ char		*ft_strndup(const char *s1, size_t n)
 	while (s1[i] != 0)
 		++i;
 	i = i < n ? i : n;
-	c = (char*)malloc(i + 1);
+	c = (char*)ft_memalloc(i + 1);
 	if (!c)
 		return (NULL);
-	return (ft_strcpy(c, s1));
+	return (ft_strncpy(c, s1, n));
 }

@@ -6,7 +6,7 @@
 #    By: bprado <bprado@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/06/03 16:52:44 by bprado        #+#    #+#                  #
-#    Updated: 2020/04/15 14:25:19 by macbook       ########   odam.nl          #
+#    Updated: 2020/04/16 17:43:20 by macbook       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ CFLAGS		= -Wall -Wextra -Werror
 SRC 		=	src/lem-in.c \
 				src/print_functions.c \
 				src/create_lnkd_lists.c \
-				src/validate_functions.c
+				src/validate_functions.c \
+				src/delete_functions.c
 LIB 		= ./libft
 LIB_A		= ./libft/libft.a
 INC 		= -I inc -I libft/inc

@@ -6,38 +6,26 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/15 16:10:14 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/16 17:44:04 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_lem-in.h"
 
-void			delete_string_lst(t_obj *obj, t_str **list)
-{
-	if (*list != NULL)
-	{
-		if ((*list)->next)
-			delete_string_lst(obj, &(*list)->next);
-		ft_memdel((void*)&(*list)->str);
-		ft_memdel((void*)&(*list));
-		*list = NULL;
-	}
-}
-
-
 // using printf to print to screen
 void			print_tstr_lst(t_obj *obj)
 {
+	TSTR_L = TSTR_STRT;
 	printf("%s()\n", __func__);
 	if (TSTR_L != NULL)
 	{
 		while (TSTR_L->next != NULL)
 		{
-			printf("addr:%p beginning:%p string:%s", TSTR_L, TSTR_L->beginning, (TSTR_L->str));
+			printf("addr:%p beginning:%p string:%s", TSTR_L, TSTR_STRT, (TSTR_L->str));
 			TSTR_L = TSTR_L->next;
 		}
-			printf("addr:%p beginning:%p string:%s\n\n", TSTR_L, TSTR_L->beginning, (TSTR_L->str));
-		TSTR_L = TSTR_L->beginning;
+			printf("addr:%p beginning:%p string:%s\n\n", TSTR_L, TSTR_STRT, (TSTR_L->str));
+		TSTR_L = TSTR_STRT;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/04/15 18:37:32 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/16 22:11:24 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 
 # define ANTS		obj->ants
 # define START_RM	obj->start_room
-# define TSTR_L		obj->tstr_list
+# define TSTR_L		obj->tstr_current_str
+# define TSTR_STRT	obj->tstr_start
 # define END_RM		obj->end_room
 # define CSTART		obj->chain_start
 # define CCURRENT	obj->chain_current
@@ -45,7 +46,6 @@ typedef	struct		s_room
 	struct s_room	*next;
 	struct s_room	*previous;
 	struct s_link	*links;
-	struct s_room	**start_room;
 }					t_room;
 
 typedef struct		s_link
@@ -56,19 +56,30 @@ typedef struct		s_link
 	struct s_link	*next;
 }					t_link;
 
+typedef struct		s_queue
+{
+	t_room			*parent;
+	int				level;
+	t_room			*next;
+	t_room			*self;
+
+	struct s_link	*start;
+	struct s_link	*current;
+	struct s_link	*next;
+}					t_queue;
+
 typedef struct		s_str
 {
 	char			*str;
 	struct s_str	*next;
-	struct s_str	*beginning;
-	struct s_str	**beginning_links;
 }					t_str;
 
 typedef struct		s_obj
 {
 	int				ants;
 	int				room_count;
-	t_str			*tstr_list;
+	t_str			*tstr_current_str;
+	t_str			*tstr_start;
 	t_str			*beginning_links;
 	// chain_start is an arbitrary start to the linked list
 	// but it guarantees to connect every node for easy deletion.
@@ -89,11 +100,21 @@ int				validate_link(char *str);
 int				validate_comment(char *str);
 int				validate_string_list(char *str);
 int				validate_first_line(t_obj *obj);
+int				check_duplicate_rooms_and_coordinates(t_obj *obj);
+int				check_duplicate_coordinates(t_obj *obj);
+
+
+
+/*
+**	delete_functions.c
+*/
+void			delete_string_lst(t_str **list);
+void			delete_troom_lst(t_room **list);
+void			delete_tlink_lst(t_link **list);
 
 /*
 **	print_functions.c
 */
-void			delete_string_lst(t_obj *obj, t_str **list);
 void			print_tstr_lst(t_obj *obj);
 void			print_troom_lst(t_obj *obj);
 void			print_tlink_lst(t_obj *obj);
@@ -106,12 +127,20 @@ void			populate_beginning_links_to_string_list(t_str *beginning_links, t_obj *ob
 /*
 **	create_lnkd_lists.c
 */
-void			create_tstr_lst(t_obj *obj);
+int				create_tstr_lst(t_obj *obj);
 void			create_tlink_node(t_room *link, t_room *room, char repeat);
 int				create_troom_node(t_obj *obj, int code);
 t_room			*get_troom_by_name(char *str, t_obj *obj);
 int				create_tlink_lst(t_obj *obj);
 int				create_troom_lst(t_obj *obj);
 
+
+/*
+**	malloced content:
+**		tstr_l
+**		tstr_l->str
+**		t_room
+**		t_room->links
+*/
 
 #endif
