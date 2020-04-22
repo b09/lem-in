@@ -1,0 +1,31 @@
+7
+mike 1 1
+##start
+bob 2 2
+john 3 3
+leah 4 4
+jill 5 5
+emma 6 6
+shane 7 7
+##end
+liz 8 8
+allen 9 9
+lisa 10 10
+mike-emma
+mike-bob
+mike-jill
+bob-emma
+bob-jill
+bob-john
+emma-jill
+john-jill
+john-shane
+shane-jill
+jill-leah
+shane-emma
+leah-john
+leah-shane
+liz-emma
+liz-shane
+liz-allen
+allen-lisa

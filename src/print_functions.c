@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/16 17:44:04 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/22 17:48:40 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,42 @@ void			print_troom_lst(t_obj *obj)
 void			print_tlink_lst(t_obj *obj)
 {
 	printf("%s()\n", __func__);
-	// obj->chain_current = obj->chain_start;
-	// printf("\nobj->chain_current:%p\n", obj->chain_current);
-	printf("Ants:%d\n", ANTS);
 	CCURRENT = CSTART;
 	while (CCURRENT)
 	{
-		// printf("ccurrent->links:%p ccurr->name:%s ccurr->links->start:%p ccurr->links->next:%p\n", CCURRENT->links, CCURRENT->name, CCURRENT->links->start, CCURRENT->links->next);
-		// CCURRENT->links = CCURRENT->links->start;
-		if (CCURRENT->links)
+		if (CCURRENT->start_link)
 		{
+			CCURRENT->links = CCURRENT->start_link;
 			while (CCURRENT->links->next != NULL)
 			{
 				printf("Room: %s links to: %s\n", CCURRENT->name, CCURRENT->links->room->name);
 				CCURRENT->links = CCURRENT->links->next;
 			}
-				printf("Room: %s links to: %s\n\n", CCURRENT->name, CCURRENT->links->room->name);
+			printf("Room: %s links to: %s\n\n", CCURRENT->name, CCURRENT->links->room->name);
 		}
 		CCURRENT = CCURRENT->next;
 	}
+	printf("exiting %s\n", __func__);
+}
+
+
+void			print_tqueue_lst(t_obj *obj)
+{
+	int 		i;
+	i = 0;
+	printf("%s()\n", __func__);
+	QCURRENT = QSTART;
+	while (QCURRENT != QEND)
+	{
+		printf("Room: %s links to room: %s		curr room addr: %p  level:%d\n", QCURRENT->parent_room->name, QCURRENT->current_room->name, QCURRENT->current_room, QCURRENT->current_room->level);
+		QCURRENT = QCURRENT->next_queue;
+	}
+	printf("Room: %s links to room: %s END!		curr room addr: %p  level:%d\n", QCURRENT->parent_room->name, QCURRENT->current_room->name, QCURRENT->current_room, QCURRENT->current_room->level);
+}
+
+void			print_tqueue_path(t_obj *obj, t_room *temp)
+{
+	if (temp != START_RM)
+		print_tqueue_path(obj, temp->queue->parent_room);
+	printf("Path to end room: %s\n", temp->name);
 }

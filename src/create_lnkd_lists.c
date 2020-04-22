@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 13:51:15 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/16 22:07:09 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/21 16:21:31 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,17 +79,15 @@ void			create_tlink_node(t_room *link, t_room *room, char repeat)
 	new_node = ft_memalloc(sizeof(t_link));
 	new_node->room = link;
 	new_node->next = NULL;
-	if (room->links == NULL)
+	if (room->start_link == NULL)
 	{
+		room->start_link = new_node;
 		room->links = new_node;
-		room->links->start = new_node;
-		room->links->current = new_node;
 	}
 	else
 	{
-		new_node->start = room->links->current->start;
-		room->links->current->next = new_node;
-		room->links->current = new_node;
+		room->links->next = new_node;
+		room->links = new_node;
 	}
 	if (repeat)
 		create_tlink_node(room, link, 0);
@@ -175,9 +173,6 @@ int				create_tlink_lst(t_obj *obj)
 		TSTR_L = TSTR_L->next;
 	if (TSTR_L->next != NULL && !validate_link(STR))
 		return (0);
-	CCURRENT = CSTART;
-
-	// // work
 	TSTR_L = BEGIN_LNKS;
 	while (TSTR_L != NULL)
 	{
@@ -189,22 +184,6 @@ int				create_tlink_lst(t_obj *obj)
 		}
 		TSTR_L = TSTR_L->next;
 	}
-
-	// // works but slow
-	// while (CCURRENT != NULL)
-	// {
-	// 	TSTR_L = BEGIN_LNKS;
-	// 	while (TSTR_L)
-	// 	{
-	// 		if (ft_strnstr(STR, CCURRENT->name, ft_strlen(STR)))
-	// 		{
-	// 			temp = get_troom_by_name(ft_strchr(STR, '-') + 1, obj);
-	// 				create_tlink_node(temp, CCURRENT, 1);
-	// 		}
-	// 		TSTR_L = TSTR_L->next;
-	// 	}
-	// 	CCURRENT = CCURRENT->next;
-	// }
 	return (1);
 }
 

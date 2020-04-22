@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/16 21:32:14 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/22 20:24:44 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,18 @@ int				main(void)
 
 	ft_bzero(&obj, sizeof(obj));
 	if (create_tstr_lst(&obj) && create_troom_lst(&obj) && \
-		create_tlink_lst(&obj))// && check_duplicate_rooms_and_coordinates(&obj))
+		create_tlink_lst(&obj) && check_duplicate_rooms_and_coordinates(&obj))
 	{
-		// print_tstr_lst(&obj);
-		// print_troom_lst(&obj);
-		// print_tlink_lst(&obj);
-		printf("complete!\n");
+		print_tstr_lst(&obj);
+		print_troom_lst(&obj);
+		print_tlink_lst(&obj);
+		create_tqueue_lst(&obj);
+		print_tqueue_lst(&obj);
+		printf("\n\ncomplete!\n");
+		// create_tqueue_lst(&obj);
+		// print_tqueue_lst(&obj);
+		print_tqueue_path(&obj, obj.q_end->current_room);
+		// printf("\n\ncomplete!\n");
 	}
 	delete_string_lst(&(obj.tstr_start));
 	delete_troom_lst(&(obj.chain_start));

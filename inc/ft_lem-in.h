@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/04/16 22:11:24 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/22 19:25:00 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # define FT_LEMIN
 
 #include "libft.h"
+#include <stdbool.h>
 
 # define ANTS		obj->ants
 # define START_RM	obj->start_room
@@ -26,6 +27,9 @@
 # define CEND		obj->chain_end
 # define INPUT_STR	obj->input_string
 # define BEGIN_LNKS	obj->beginning_links
+# define QCURRENT	obj->q_current
+# define QSTART		obj->q_start
+# define QEND		obj->q_end
 // # define NAME		obj->
 # define STR		TSTR_L->str
 
@@ -43,29 +47,30 @@ typedef	struct		s_room
 	char			*name;
 	int				coord_x;
 	int				coord_y;
+	
 	struct s_room	*next;
 	struct s_room	*previous;
+
 	struct s_link	*links;
+	struct s_link	*start_link;
+	
+	bool			on_queue;
+	bool			on_path;
+	int				level;
+	struct s_queue	*queue;
 }					t_room;
 
 typedef struct		s_link
 {
 	t_room			*room;
-	struct s_link	*start;
-	struct s_link	*current;
 	struct s_link	*next;
 }					t_link;
 
 typedef struct		s_queue
 {
-	t_room			*parent;
-	int				level;
-	t_room			*next;
-	t_room			*self;
-
-	struct s_link	*start;
-	struct s_link	*current;
-	struct s_link	*next;
+	t_room			*parent_room;
+	t_room			*current_room;
+	struct s_queue	*next_queue;
 }					t_queue;
 
 typedef struct		s_str
@@ -91,6 +96,10 @@ typedef struct		s_obj
 
 	t_room			*start_room;
 	t_room			*end_room;
+
+	t_queue			*q_start;
+	t_queue			*q_current;
+	t_queue			*q_end;
 }					t_obj;
 
 /*
@@ -118,6 +127,10 @@ void			delete_tlink_lst(t_link **list);
 void			print_tstr_lst(t_obj *obj);
 void			print_troom_lst(t_obj *obj);
 void			print_tlink_lst(t_obj *obj);
+void			print_tqueue_lst(t_obj *obj);
+void			print_tqueue_path(t_obj *obj, t_room *temp);
+
+
 
 /*
 **	lem-in.c
@@ -133,6 +146,13 @@ int				create_troom_node(t_obj *obj, int code);
 t_room			*get_troom_by_name(char *str, t_obj *obj);
 int				create_tlink_lst(t_obj *obj);
 int				create_troom_lst(t_obj *obj);
+
+/*
+**	solver.c
+*/
+void            create_tqueue_node(t_obj *obj);
+void            create_tqueue_lst(t_obj *obj);
+
 
 
 /*
