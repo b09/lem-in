@@ -6,51 +6,62 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/22 20:24:44 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/27 20:17:32 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_lem-in.h"
-
-/*
-main
-
-*/
-
-// t_room			*get_addr_by_name(char *str, t_obj *obj);
-// void			create_tlink_node(t_room *link, t_room *room, char repeat);
-// int				create_troom_node(t_obj *obj, int code);
-// int				create_tlink_lst(t_obj *obj);
-// int				create_troom_lst(t_obj *obj);
-// int				validate_link(char *str);
-// int				validate_comment(char *str);
-// int				validate_string_list(char *str);
-// void			populate_beginning_links_to_string_list(t_str *beginning_links, t_obj *obj); // make sure all lnkd_lists have members correctly assigned
-
 
 int				main(void)
 {
 	t_obj 		obj;
 
 	ft_bzero(&obj, sizeof(obj));
-	if (create_tstr_lst(&obj) && create_troom_lst(&obj) && \
-		create_tlink_lst(&obj) && check_duplicate_rooms_and_coordinates(&obj))
+	if (init_lists_and_print(&obj))
 	{
-		print_tstr_lst(&obj);
-		print_troom_lst(&obj);
-		print_tlink_lst(&obj);
+		printf("************\n\n");
 		create_tqueue_lst(&obj);
 		print_tqueue_lst(&obj);
-		printf("\n\ncomplete!\n");
+		printf("print_tqueue_path()\n\n");
+		print_tqueue_path(&obj, obj.q_end->current_room);
+
+		assign_path(&obj, obj.q_end->current_room);
+		printf("\ndelete_tqueue_path()\n\n");
+		delete_tqueue_nodes(&obj, &(obj.q_start));
+		connect_tqueue_nodes(&obj, (obj.q_end));
+		printf("\n");
+		print_tqueue_lst(&obj);
+
+		obj.q_start = 0;
+
+		
+
 		// create_tqueue_lst(&obj);
 		// print_tqueue_lst(&obj);
-		print_tqueue_path(&obj, obj.q_end->current_room);
 		// printf("\n\ncomplete!\n");
 	}
-	delete_string_lst(&(obj.tstr_start));
-	delete_troom_lst(&(obj.chain_start));
+	delete_all(&obj);
 	return (0);
 }
+
+
+
+int				init_lists_and_print(t_obj *obj)
+{
+	if (create_tstr_lst(obj) && create_troom_lst(obj) && \
+		create_tlink_lst(obj) && check_duplicate_rooms_and_coordinates(obj))
+		{
+			print_tstr_lst(obj);
+			print_troom_lst(obj);
+			print_tlink_lst(obj);
+			return (1);
+		}
+	delete_all(obj);
+	return (0);
+}
+
+
+
 
 /*
 **	every t_str node has a t_str *beginning_links member which is at first NULL

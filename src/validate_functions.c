@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 14:24:47 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/16 18:43:31 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/27 20:34:27 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,15 +122,15 @@ int				check_duplicate_coordinates(t_obj *obj)
 	temp = CSTART;
 	while (temp)
 	{
-		CCURRENT = temp->next;
-		while (CCURRENT && temp)
+		ROOM = temp->next;
+		while (ROOM && temp)
 		{
-			if (CCURRENT->coord_x == temp->coord_x)
+			if (ROOM->coord_x == temp->coord_x)
 			{
-				if (CCURRENT->coord_y == temp->coord_y)
+				if (ROOM->coord_y == temp->coord_y)
 					return (0);
 			}
-			CCURRENT = CCURRENT->next;
+			ROOM = ROOM->next;
 		}
 		temp = temp->next;
 	}
@@ -144,12 +144,12 @@ int				check_duplicate_rooms_and_coordinates(t_obj *obj)
 	temp = CSTART;
 	while (temp)
 	{
-		CCURRENT = temp->next;
-		while (CCURRENT && temp)
+		ROOM = temp->next;
+		while (ROOM && temp)
 		{
-			if (ft_strcmp(CCURRENT->name, temp->name) == 0)
+			if (ft_strcmp(ROOM->name, temp->name) == 0)
 				return (0);
-			CCURRENT = CCURRENT->next;
+			ROOM = ROOM->next;
 		}
 		temp = temp->next;
 	}

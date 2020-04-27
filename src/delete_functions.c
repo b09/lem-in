@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/16 17:41:22 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/16 17:42:26 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/27 19:44:17 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,13 @@ void			delete_tlink_lst(t_link **list)
 		ft_memdel((void*)&(*list));
 		*list = NULL;
 	}
+}
+
+void			delete_all(t_obj *obj)
+{
+	if (TSTR_L)
+		delete_string_lst(&TSTR_L);
+	if (CSTART)
+		delete_troom_lst(&CSTART);
+	exit(1);
 }

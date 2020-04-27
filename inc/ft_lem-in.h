@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/04/22 19:25:00 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/27 20:37:50 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@
 # define TSTR_STRT	obj->tstr_start
 # define END_RM		obj->end_room
 # define CSTART		obj->chain_start
-# define CCURRENT	obj->chain_current
+# define ROOM		obj->chain_current
 # define CEND		obj->chain_end
 # define INPUT_STR	obj->input_string
-# define BEGIN_LNKS	obj->beginning_links
+# define LINKS_STRT	obj->beginning_links
 # define QCURRENT	obj->q_current
 # define QSTART		obj->q_start
 # define QEND		obj->q_end
-// # define NAME		obj->
-# define STR		TSTR_L->str
+// # define NAME		obj->chain_current->name
+# define STR		obj->tstr_current_str->str
 
 /*
 **	name of room
@@ -58,6 +58,8 @@ typedef	struct		s_room
 	bool			on_path;
 	int				level;
 	struct s_queue	*queue;
+	struct s_queue	*path;
+
 }					t_room;
 
 typedef struct		s_link
@@ -70,6 +72,7 @@ typedef struct		s_queue
 {
 	t_room			*parent_room;
 	t_room			*current_room;
+	t_room			*next_room;
 	struct s_queue	*next_queue;
 }					t_queue;
 
@@ -83,6 +86,7 @@ typedef struct		s_obj
 {
 	int				ants;
 	int				room_count;
+	
 	t_str			*tstr_current_str;
 	t_str			*tstr_start;
 	t_str			*beginning_links;
@@ -120,6 +124,7 @@ int				check_duplicate_coordinates(t_obj *obj);
 void			delete_string_lst(t_str **list);
 void			delete_troom_lst(t_room **list);
 void			delete_tlink_lst(t_link **list);
+void			delete_all(t_obj *obj);
 
 /*
 **	print_functions.c
@@ -129,6 +134,8 @@ void			print_troom_lst(t_obj *obj);
 void			print_tlink_lst(t_obj *obj);
 void			print_tqueue_lst(t_obj *obj);
 void			print_tqueue_path(t_obj *obj, t_room *temp);
+void			print_multiple_paths(t_obj *obj);
+
 
 
 
@@ -136,6 +143,8 @@ void			print_tqueue_path(t_obj *obj, t_room *temp);
 **	lem-in.c
 */
 void			populate_beginning_links_to_string_list(t_str *beginning_links, t_obj *obj); // make sure all lnkd_lists have members correctly assigned
+int				init_lists_and_print(t_obj *obj);
+
 
 /*
 **	create_lnkd_lists.c
@@ -152,6 +161,11 @@ int				create_troom_lst(t_obj *obj);
 */
 void            create_tqueue_node(t_obj *obj);
 void            create_tqueue_lst(t_obj *obj);
+void			assign_path(t_obj *obj, t_room *room);
+void			delete_tqueue_nodes(t_obj *obj, t_queue **temp);
+void			connect_tqueue_nodes(t_obj *obj, t_queue *node);
+
+
 
 
 

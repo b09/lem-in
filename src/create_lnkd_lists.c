@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 13:51:15 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/21 16:21:31 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/27 20:37:23 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,10 @@ int				create_tstr_lst(t_obj *obj)
 			TSTR_L->next = temp;
 			TSTR_L = temp;
 		}
+		TSTR_L = TSTR_STRT;
+		return (1);
 	}
-	TSTR_L = TSTR_STRT;
-	return (1);
+	return (0);
 }
 
 /*
@@ -112,26 +113,26 @@ int				create_troom_node(t_obj *obj, int code)
 	int			i;
 
 	i = 0;
-	CCURRENT = ft_memalloc(sizeof(t_room));
+	ROOM = ft_memalloc(sizeof(t_room));
 	while (STR[i] && STR[i] != ' ')
 		++i;
-	CCURRENT->name = ft_strndup(STR, i);
-	CCURRENT->coord_x = ft_atoi(&STR[i + 1]);// for space in string
+	ROOM->name = ft_strndup(STR, i);
+	ROOM->coord_x = ft_atoi(&STR[i + 1]);// for space in string
 	while (STR[i + 1] && ft_isdigit(STR[i + 1]))
 		++i;
-	CCURRENT->coord_y = ft_atoi(&STR[i + 2]); // for second space
+	ROOM->coord_y = ft_atoi(&STR[i + 2]); // for second space
 	if (CSTART == NULL)
-		CSTART = CCURRENT;
+		CSTART = ROOM;
 	else
 	{
-		CEND->next = CCURRENT;
-		CCURRENT->previous = CEND;
+		CEND->next = ROOM;
+		ROOM->previous = CEND;
 	}
 	if (code == 2)
-		START_RM = CCURRENT;
+		START_RM = ROOM;
 	else if (code == 3)
-		END_RM = CCURRENT;
-	CEND = CCURRENT;
+		END_RM = ROOM;
+	CEND = ROOM;
 	return (1);
 }
 
@@ -168,12 +169,12 @@ int				create_tlink_lst(t_obj *obj)
 	t_room 		*temp;
 	t_room 		*temp2;
 	
-	TSTR_L = BEGIN_LNKS;
+	TSTR_L = LINKS_STRT;
 	while (TSTR_L && TSTR_L->next != NULL && validate_link(STR))
 		TSTR_L = TSTR_L->next;
 	if (TSTR_L->next != NULL && !validate_link(STR))
 		return (0);
-	TSTR_L = BEGIN_LNKS;
+	TSTR_L = LINKS_STRT;
 	while (TSTR_L != NULL)
 	{
 		if (STR[0] != '#')
@@ -216,7 +217,7 @@ int				create_troom_lst(t_obj *obj)
 		}
 		else if (i == 5)
 		{
-			BEGIN_LNKS = TSTR_L;
+			LINKS_STRT = TSTR_L;
 			return (1);
 		}
 		else if (i == 0)

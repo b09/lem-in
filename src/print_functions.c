@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/22 17:48:40 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/27 20:34:27 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ void			print_tstr_lst(t_obj *obj)
 
 void			print_troom_lst(t_obj *obj)
 {
-	CCURRENT = CSTART;
+	ROOM = CSTART;
 	printf("%s()\n", __func__);
-	while (CCURRENT)
+	while (ROOM)
 	{
-		// printf("CCURRENT:%p, name:%s, coord_x:%d, coord_y:%d\nstart_rm:%p end_rm:%p\n", CCURRENT, CCURRENT->name, CCURRENT->coord_x, CCURRENT->coord_y, START_RM, END_RM);
-		printf("CCURRENT:%p, name:%s, coord_x:%d, coord_y:%d\n", CCURRENT, CCURRENT->name, CCURRENT->coord_x, CCURRENT->coord_y);
-		CCURRENT = CCURRENT->next;
+		// printf("ROOM:%p, name:%s, coord_x:%d, coord_y:%d\nstart_rm:%p end_rm:%p\n", ROOM, ROOM->name, ROOM->coord_x, ROOM->coord_y, START_RM, END_RM);
+		printf("ROOM:%p, name:%s, coord_x:%d, coord_y:%d\n", ROOM, ROOM->name, ROOM->coord_x, ROOM->coord_y);
+		ROOM = ROOM->next;
 	}
 	printf("\n");
 }
@@ -45,22 +45,22 @@ void			print_troom_lst(t_obj *obj)
 void			print_tlink_lst(t_obj *obj)
 {
 	printf("%s()\n", __func__);
-	CCURRENT = CSTART;
-	while (CCURRENT)
+	ROOM = CSTART;
+	while (ROOM)
 	{
-		if (CCURRENT->start_link)
+		if (ROOM->start_link)
 		{
-			CCURRENT->links = CCURRENT->start_link;
-			while (CCURRENT->links->next != NULL)
+			ROOM->links = ROOM->start_link;
+			while (ROOM->links->next != NULL)
 			{
-				printf("Room: %s links to: %s\n", CCURRENT->name, CCURRENT->links->room->name);
-				CCURRENT->links = CCURRENT->links->next;
+				printf("Room: %s links to: %s\n", ROOM->name, ROOM->links->room->name);
+				ROOM->links = ROOM->links->next;
 			}
-			printf("Room: %s links to: %s\n\n", CCURRENT->name, CCURRENT->links->room->name);
+			printf("Room: %s links to: %s\n\n", ROOM->name, ROOM->links->room->name);
 		}
-		CCURRENT = CCURRENT->next;
+		ROOM = ROOM->next;
 	}
-	printf("exiting %s\n", __func__);
+	// printf("exiting %s\n", __func__);
 }
 
 
@@ -72,15 +72,40 @@ void			print_tqueue_lst(t_obj *obj)
 	QCURRENT = QSTART;
 	while (QCURRENT != QEND)
 	{
-		printf("Room: %s links to room: %s		curr room addr: %p  level:%d\n", QCURRENT->parent_room->name, QCURRENT->current_room->name, QCURRENT->current_room, QCURRENT->current_room->level);
+		printf("Room: %s links to room: %s		q addr: %p  level:%d\n", QCURRENT->parent_room->name, QCURRENT->current_room->name, QCURRENT, QCURRENT->current_room->level);
 		QCURRENT = QCURRENT->next_queue;
 	}
-	printf("Room: %s links to room: %s END!		curr room addr: %p  level:%d\n", QCURRENT->parent_room->name, QCURRENT->current_room->name, QCURRENT->current_room, QCURRENT->current_room->level);
+	printf("Room: %s links to room: %s END!		q addr: %p  level:%d\n\n", QCURRENT->parent_room->name, QCURRENT->current_room->name, QCURRENT, QCURRENT->current_room->level);
 }
 
 void			print_tqueue_path(t_obj *obj, t_room *temp)
 {
+	// printf("\n%s\n", __func__);
 	if (temp != START_RM)
 		print_tqueue_path(obj, temp->queue->parent_room);
 	printf("Path to end room: %s\n", temp->name);
+}
+
+void			print_multiple_paths(t_obj *obj)
+{
+	printf("\n%s\n", __func__);
+	t_room *temp;
+	t_link *link;
+	link = START_RM->start_link;
+
+	while (link)
+	{
+		printf("start room: %s\n", START_RM->name);
+		temp = link->room;
+		while (temp)
+		{
+			printf("room: %s temp->queue:%p\n", temp->name, temp->queue);
+			if (temp->queue && temp->queue->next_queue)
+				temp = temp->queue->next_queue->current_room;
+			else
+				temp = NULL;
+			
+		}
+		link = link->next;
+	}
 }
