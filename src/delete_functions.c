@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/16 17:41:22 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/27 19:44:17 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/28 20:31:42 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void			delete_troom_lst(t_room **list)
 {
 	if ((*list)->links)
 		delete_tlink_lst(&(*list)->links);
+	if ((*list)->path)
+		ft_memdel((void*)&(*list)->path);
 	if (*list != NULL)
 	{
 		if ((*list)->next)

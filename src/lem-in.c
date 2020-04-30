@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/27 20:17:32 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/30 20:10:15 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,32 @@ int				main(void)
 	ft_bzero(&obj, sizeof(obj));
 	if (init_lists_and_print(&obj))
 	{
-		printf("************\n\n");
-		create_tqueue_lst(&obj);
-		print_tqueue_lst(&obj);
-		printf("print_tqueue_path()\n\n");
-		print_tqueue_path(&obj, obj.q_end->current_room);
-
-		assign_path(&obj, obj.q_end->current_room);
-		printf("\ndelete_tqueue_path()\n\n");
-		delete_tqueue_nodes(&obj, &(obj.q_start));
-		connect_tqueue_nodes(&obj, (obj.q_end));
-		printf("\n");
-		print_tqueue_lst(&obj);
-
-		obj.q_start = 0;
-
-		
-
-		// create_tqueue_lst(&obj);
-		// print_tqueue_lst(&obj);
-		// printf("\n\ncomplete!\n");
+		solver(&obj);
+		solver(&obj);
+		solver(&obj);
 	}
 	delete_all(&obj);
 	return (0);
+}
+
+int				solver(t_obj *obj)
+{
+	printf("************\n\n");
+	breathe_first_search(obj);
+	printf("end_rm->queue after bfs():%p path:%p\n", END_RM->queue, END_RM->path);
+	if (QSTART)
+	{
+		print_tqueue_lst(obj);
+
+		assign_path(obj, obj->q_end->current_room);
+		printf("\ndelete_tqueue_nodes()\n\n");
+		delete_tqueue_nodes(obj, (obj->q_start->current_room));
+
+		connect_tqueue_nodes(obj, (obj->q_end->current_room), 0);
+		printf("\n");
+		print_multiple_paths(obj);
+	}
+	return (1);
 }
 
 
@@ -61,21 +64,3 @@ int				init_lists_and_print(t_obj *obj)
 }
 
 
-
-
-/*
-**	every t_str node has a t_str *beginning_links member which is at first NULL
-**	this func() iterates through the t_str linked list and assigns
-**	beginning_links to every node in the list
-*/
-// void			populate_beginning_links_to_string_list(t_str *beginning_links, t_obj *obj) // make sure all lnkd_lists have members correctly assigned
-// {
-// 	TSTR_L = TSTR_L->beginning;
-// 	while (TSTR_L && TSTR_L->next != NULL)
-// 	{
-// 		TSTR_L->beginning_links = beginning_links;
-// 		TSTR_L = TSTR_L->next;
-// 	}
-// 	TSTR_L->beginning_links = beginning_links;
-// 	TSTR_L = TSTR_L->beginning;
-// }

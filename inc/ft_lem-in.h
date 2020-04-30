@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/04/27 20:37:50 by macbook       ########   odam.nl         */
+/*   Updated: 2020/04/30 16:25:50 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 
 # define ANTS		obj->ants
 # define START_RM	obj->start_room
+# define END_RM		obj->end_room
+# define ROOM		obj->chain_current
 # define TSTR_L		obj->tstr_current_str
 # define TSTR_STRT	obj->tstr_start
-# define END_RM		obj->end_room
 # define CSTART		obj->chain_start
-# define ROOM		obj->chain_current
 # define CEND		obj->chain_end
 # define INPUT_STR	obj->input_string
 # define LINKS_STRT	obj->beginning_links
@@ -32,6 +32,14 @@
 # define QEND		obj->q_end
 // # define NAME		obj->chain_current->name
 # define STR		obj->tstr_current_str->str
+
+#define C_RED     "\x1b[31m"
+#define C_GREEN   "\x1b[32m"
+#define C_YELLOW  "\x1b[33m"
+#define C_BLUE    "\x1b[34m"
+#define C_MAGENTA "\x1b[35m"
+#define C_CYAN    "\x1b[36m"
+#define C_RESET   "\x1b[0m"
 
 /*
 **	name of room
@@ -142,7 +150,6 @@ void			print_multiple_paths(t_obj *obj);
 /*
 **	lem-in.c
 */
-void			populate_beginning_links_to_string_list(t_str *beginning_links, t_obj *obj); // make sure all lnkd_lists have members correctly assigned
 int				init_lists_and_print(t_obj *obj);
 
 
@@ -160,10 +167,11 @@ int				create_troom_lst(t_obj *obj);
 **	solver.c
 */
 void            create_tqueue_node(t_obj *obj);
-void            create_tqueue_lst(t_obj *obj);
+void            breathe_first_search(t_obj *obj);
 void			assign_path(t_obj *obj, t_room *room);
-void			delete_tqueue_nodes(t_obj *obj, t_queue **temp);
-void			connect_tqueue_nodes(t_obj *obj, t_queue *node);
+void			delete_tqueue_nodes(t_obj *obj, t_room *room);
+void			connect_tqueue_nodes(t_obj *obj, t_room *current_room, t_room *next_room);
+int				solver(t_obj *obj);
 
 
 
