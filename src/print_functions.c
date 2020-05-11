@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/30 18:37:55 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/10 20:07:54 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,14 @@ void			print_tstr_lst(t_obj *obj)
 	{
 		while (TSTR_L->next != NULL)
 		{
-			printf("addr:%p beginning:%p string:%s", TSTR_L, TSTR_STRT, (TSTR_L->str));
+			// printf("addr:%p beginning:%p string:%s", TSTR_L, TSTR_STRT, (TSTR_L->str));
+			ft_putstr(TSTR_L->str);
 			TSTR_L = TSTR_L->next;
 		}
-			printf("addr:%p beginning:%p string:%s\n\n", TSTR_L, TSTR_STRT, (TSTR_L->str));
+			// printf("addr:%p beginning:%p string:%s\n\n", TSTR_L, TSTR_STRT, (TSTR_L->str));
+		ft_putstr(TSTR_L->str);
+		ft_putchar('\n');
+		ft_putchar('\n');
 		TSTR_L = TSTR_STRT;
 	}
 }
@@ -108,7 +112,7 @@ void			print_multiple_paths(t_obj *obj)
 		{
 			if (room->path && room->path->next_room)
 			{
-				printf("room: %s temp->queue:%p next_room:%s\n", room->name, room->path, room->path->next_room->name);
+				printf("room: %s room->path:%p next_room:%s\n", room->name, room->path, room->path->next_room->name);
 
 				room = room->path->next_room;
 			}

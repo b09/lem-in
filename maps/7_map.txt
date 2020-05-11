@@ -9,8 +9,10 @@ C 4 4
 D 1 4
 E 10 4
 F 1 14
+G 1 16
 start-A
 start-B
+start-G
 B-C
 A-D
 B-E

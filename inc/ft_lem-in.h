@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/04/30 16:25:50 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/11 17:13:41 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef	struct		s_room
 typedef struct		s_link
 {
 	t_room			*room;
+	bool			on_queue;
 	struct s_link	*next;
 }					t_link;
 
@@ -82,6 +83,7 @@ typedef struct		s_queue
 	t_room			*current_room;
 	t_room			*next_room;
 	struct s_queue	*next_queue;
+	struct s_queue	*prev_queue;
 }					t_queue;
 
 typedef struct		s_str
@@ -167,11 +169,13 @@ int				create_troom_lst(t_obj *obj);
 **	solver.c
 */
 void            create_tqueue_node(t_obj *obj);
-void            breathe_first_search(t_obj *obj);
+void            breadth_first_search(t_obj *obj);
 void			assign_path(t_obj *obj, t_room *room);
 void			delete_tqueue_nodes(t_obj *obj, t_room *room);
 void			connect_tqueue_nodes(t_obj *obj, t_room *current_room, t_room *next_room);
 int				solver(t_obj *obj);
+int				count_links(t_link *room);
+
 
 
 
