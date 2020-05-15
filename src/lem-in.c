@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/05/10 20:56:47 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/14 18:59:30 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int				main(void)
 		solver(&obj);
 		solver(&obj);
 		solver(&obj);
-		solver(&obj);
-		solver(&obj);
+		// solver(&obj);
+		// solver(&obj);
 	}
 	delete_all(&obj);
 	return (0);
@@ -33,16 +33,21 @@ int				solver(t_obj *obj)
 {
 	// printf("************\n\n");
 	breadth_first_search(obj);
+	print_queue_from_qend(obj);
+	printf("%s() Line: %d\n\n", __func__, __LINE__);
+	
+
 	printf("end_rm->queue after bfs():%s path:%p queueu:%p\n", QEND->current_room->name, END_RM->path, END_RM->queue);
 	if (QSTART)
 	{
 		// print_tqueue_lst(obj);
 
-		assign_path(obj, obj->q_end->current_room);
-		// printf("\ndelete_tqueue_nodes()\n\n");
-		delete_tqueue_nodes(obj, (obj->q_start->current_room));
+		printf("inside assign_path(), recursive\n");
+		assign_path(obj, QEND);
+		printf("\ndelete_tqueue_nodes()\n\n");
+		delete_tqueue_nodes(obj, QSTART);
 
-		connect_tqueue_nodes(obj, (obj->q_end->current_room), 0);
+		connect_tqueue_nodes(obj);//, QEND->current_room, 0);
 		// printf("\n");
 		print_multiple_paths(obj);
 	}

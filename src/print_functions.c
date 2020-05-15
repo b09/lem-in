@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/05/10 20:07:54 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/14 19:13:21 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,11 @@ void			print_tqueue_lst(t_obj *obj)
 	ROOM = QSTART->current_room;
 	while (ROOM != QEND->current_room)
 	{
-		if (ROOM->queue && ROOM->queue->next_room)
-			printf("parent room: %s links to current room: " C_BLUE "%s " C_RESET "next:%s	q addr: %p  level:%d\n", ROOM->queue->parent_room->name, ROOM->name, ROOM->queue->next_room->name, ROOM->queue, ROOM->level);
-		ROOM = ROOM->queue->next_room;
+		if (ROOM->queue && ROOM->queue->child_room)
+			printf("parent room: %s links to current room: " C_BLUE "%s " C_RESET "next:%s	q addr: %p  level:%d\n", ROOM->queue->parent_room->name, ROOM->name, ROOM->queue->child_room->name, ROOM->queue, ROOM->level);
+		ROOM = ROOM->queue->child_room;
 	}
-	printf("parent room: %s links to current room: %s next:%p	q addr: %p  level:%d\n", ROOM->queue->parent_room->name, ROOM->name, ROOM->queue->next_room, ROOM->queue, ROOM->level);
+	printf("parent room: %s links to current room: %s next:%p	q addr: %p  level:%d\n", ROOM->queue->parent_room->name, ROOM->name, ROOM->queue->child_room, ROOM->queue, ROOM->level);
 }
 
 
@@ -110,11 +110,11 @@ void			print_multiple_paths(t_obj *obj)
 			printf("start room: %s\n", START_RM->name);
 		while (room && room->path)
 		{
-			if (room->path && room->path->next_room)
+			if (room->path && room->path->child_room)
 			{
-				printf("room: %s room->path:%p next_room:%s\n", room->name, room->path, room->path->next_room->name);
+				printf("room: %s room->path:%p child_room:%s level:%d\n", room->name, room->path, room->path->child_room->name, room->path->level);
 
-				room = room->path->next_room;
+				room = room->path->child_room;
 			}
 			else
 			{

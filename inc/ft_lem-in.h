@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/05/11 17:13:41 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/14 15:31:24 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define INPUT_STR	obj->input_string
 # define LINKS_STRT	obj->beginning_links
 # define QCURRENT	obj->q_current
+# define QHEAD		obj->q_head
 # define QSTART		obj->q_start
 # define QEND		obj->q_end
 // # define NAME		obj->chain_current->name
@@ -61,9 +62,13 @@ typedef	struct		s_room
 
 	struct s_link	*links;
 	struct s_link	*start_link;
+
+	// value must be incremented AND decremented whithin same bfs() call.
+	bool			parent_went_against_path;
+	// int				number_of_times_on_queue;
 	
-	bool			on_queue;
-	bool			on_path;
+	// bool			on_queue_outgoing;
+	// bool			room_on_path;
 	int				level;
 	struct s_queue	*queue;
 	struct s_queue	*path;
@@ -73,15 +78,23 @@ typedef	struct		s_room
 typedef struct		s_link
 {
 	t_room			*room;
-	bool			on_queue;
+	bool			on_queue_outgoing;
+	bool			on_queue_incoming;
 	struct s_link	*next;
 }					t_link;
 
 typedef struct		s_queue
 {
+	bool			q_on_path;
 	t_room			*parent_room;
+	struct s_queue	*parent_queue;
 	t_room			*current_room;
-	t_room			*next_room;
+	/// child_room, child_queue populated once path found
+	t_room			*child_room;
+	struct s_queue	*child_queue;
+
+	t_link			*parent_links_child;
+	int				level;
 	struct s_queue	*next_queue;
 	struct s_queue	*prev_queue;
 }					t_queue;
@@ -113,6 +126,7 @@ typedef struct		s_obj
 
 	t_queue			*q_start;
 	t_queue			*q_current;
+	t_queue			*q_head;
 	t_queue			*q_end;
 }					t_obj;
 
@@ -170,11 +184,13 @@ int				create_troom_lst(t_obj *obj);
 */
 void            create_tqueue_node(t_obj *obj);
 void            breadth_first_search(t_obj *obj);
-void			assign_path(t_obj *obj, t_room *room);
-void			delete_tqueue_nodes(t_obj *obj, t_room *room);
-void			connect_tqueue_nodes(t_obj *obj, t_room *current_room, t_room *next_room);
+void			assign_path(t_obj *obj, t_queue *room);
+void			delete_tqueue_nodes(t_obj *obj, t_queue *queue);
+void			connect_tqueue_nodes(t_obj *obj);//, t_room *current_room, t_room *child_room);
 int				solver(t_obj *obj);
 int				count_links(t_link *room);
+void			print_queue_from_qend(t_obj *obj);
+
 
 
 
