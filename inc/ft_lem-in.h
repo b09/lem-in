@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/05/14 15:31:24 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/24 19:50:02 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct		s_link
 {
 	t_room			*room;
 	bool			on_queue_outgoing;
+	struct s_queue	*lnk_queue;
 	bool			on_queue_incoming;
 	struct s_link	*next;
 }					t_link;
@@ -95,6 +96,7 @@ typedef struct		s_queue
 
 	t_link			*parent_links_child;
 	int				level;
+	int				path_total_steps;
 	struct s_queue	*next_queue;
 	struct s_queue	*prev_queue;
 }					t_queue;
@@ -167,6 +169,11 @@ void			print_multiple_paths(t_obj *obj);
 **	lem-in.c
 */
 int				init_lists_and_print(t_obj *obj);
+int				solver(t_obj *obj);
+void			print_heuristic_level(t_obj *obj);
+void			connect_everything(t_obj *obj);
+
+
 
 
 /*
@@ -182,14 +189,17 @@ int				create_troom_lst(t_obj *obj);
 /*
 **	solver.c
 */
-void            create_tqueue_node(t_obj *obj);
+void            create_tqueue_node(t_obj *obj);//, bool negative_level);
 void            breadth_first_search(t_obj *obj);
 void			assign_path(t_obj *obj, t_queue *room);
 void			delete_tqueue_nodes(t_obj *obj, t_queue *queue);
 void			connect_tqueue_nodes(t_obj *obj);//, t_room *current_room, t_room *child_room);
-int				solver(t_obj *obj);
 int				count_links(t_link *room);
 void			print_queue_from_qend(t_obj *obj);
+int				check_parent_queue(t_obj *obj);
+int				assign_level(t_obj *obj);
+
+
 
 
 

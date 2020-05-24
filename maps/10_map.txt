@@ -1,0 +1,39 @@
+1
+##start
+A 0 1
+B 0 2
+C 0 3
+D 0 4
+E 0 5
+F 0 6
+G 0 7
+H 0 8
+I 0 9
+J 0 10
+K 0 12
+L 0 13
+M 0 16
+N 0 17
+O 0 18
+##end
+end 0 15
+A-D
+A-B
+A-C
+B-E
+C-F
+D-G
+D-H
+E-I
+F-G
+G-J
+G-K
+H-L
+I-J
+I-M
+J-M
+K-N
+L-O
+M-end
+N-end
+O-end
