@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/05/24 20:36:41 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/26 20:59:18 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,81 @@ void			connect_everything(t_obj *obj)
 		}
 	}
 }
+
+/*
+**	ensure the length of each path is in the path->path_total_steps member
+**	create a while loop that starts at 1, and checks path_total_steps for
+**	each path. one the shortest path/s are found, start a counter from that
+**	point which is when the first ants would reach the end. assign that
+**	counter (which is one) to the path as the minimum number of ants requi-
+**	red to use that path, and if multiple paths contain the same length,
+**	assign the same number to them, but also increase that second counter
+**	based on the number of current paths that can handle ants
+*/
+
+int				get_number_of_paths(t_obj *obj)
+{
+	int			paths;
+
+	paths = 0;
+	START_RM->links = START_RM->start_link;
+	while (START_RM->links)
+	{
+		if (START_RM->links->room->path)
+			++paths;
+		START_RM->links = START_RM->links->next;
+	}
+	return (paths);
+}
+
+
+void			dispatch_ants(t_obj *obj)
+{
+	int			steps;
+	int			ants;
+	int			*ant_counter;
+	int			paths;
+
+	steps = 1;
+	ants = 1;
+	ant_counter = 0;
+	paths = get_number_of_paths(obj);
+	START_RM->links = START_RM->start_link;
+	while (paths)
+	{
+		// while paths, which are decremented
+		// check if any of the paths has a length equal to the current number of steps
+		// which if there is, start counting ants and incrementing the number of ants
+		// by the ant_counter for every increased step
+		//		and for every path that does match the current number of steps
+		//		increase the ant_counter by one
+		paths = check_all_paths(obj, steps, paths, ant_counter);
+		ants += *ant_counter;
+		++steps;
+	}
+
+
+		int		ant_counter_copy;
+
+		ant_counter_copy = ant_counter;
+
+		while (START_RM->links && paths)
+		{
+			if (START_RM->links->room->path && !START_RM->links->room->path->min_ants)
+			{
+				if (START_RM->links->room->path->path_total_steps == steps)
+				{
+					START_RM->links->room->path->min_ants = ants;
+					++*(ant_counter);
+					--paths;
+					// START_RM->links = START_RM->start_link;
+				}
+			}
+			START_RM->links = START_RM->links->next;
+		}
+}
+
+
 
 
 

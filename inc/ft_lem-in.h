@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/05/24 19:50:02 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/26 16:05:16 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ typedef struct		s_queue
 	t_link			*parent_links_child;
 	int				level;
 	int				path_total_steps;
+	int				min_ants;
 	struct s_queue	*next_queue;
 	struct s_queue	*prev_queue;
 }					t_queue;
