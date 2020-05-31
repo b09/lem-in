@@ -6,7 +6,7 @@
 #    By: bprado <bprado@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/06/03 16:52:44 by bprado        #+#    #+#                  #
-#    Updated: 2020/04/20 12:12:06 by macbook       ########   odam.nl          #
+#    Updated: 2020/05/31 17:57:03 by macbook       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,9 @@ SRC 		=	src/lem-in.c \
 				src/solver.c
 LIB 		= ./libft
 LIB_A		= ./libft/libft.a
-INC 		= -I inc -I libft/inc
+PFLIB		= ./ft_printf
+PFLIB_A		= ./ft_printf/libftprintf.a
+INC 		= -I inc -I libft/inc -I ft_printf/inc
 OBJ			= $(patsubst src/%.c,obj/%.o,$(SRC))
 CC			= gcc
 
@@ -44,8 +46,8 @@ all: $(NAME)
 begin_statement:
 	@printf "$(BOLD) *** Compiling $(NAME) ***$(END_TPUT)\n"
 
-$(NAME): begin_statement $(OBJ) libft/libft.a
-	@$(CC) -o $@ $(CFLAGS) $(INC) $(OBJ) $(LIB_A)
+$(NAME): begin_statement $(OBJ) ft_printf/libftprintf.a
+	@$(CC) -o $@ $(CFLAGS) $(INC) $(OBJ) $(PFLIB_A)
 	@printf " $(CYAN)$(BOLD)$(UNDERLINE)./$(NAME)$(END)$(END_TPUT) created\n"
 
 obj/%.o: src/%.c inc/ft_lem-in.h
@@ -53,8 +55,8 @@ obj/%.o: src/%.c inc/ft_lem-in.h
 	@printf " $(GREEN)$(BOLD)✔$(END)$(END_TPUT) Object file for $(PURPLE)$<$(END)\n"
 	@$(CC) -c $(CFLAGS) $(INC) -o $@ $<
 
-libft/libft.a: $(wildcard libft/*.c)
-	@$(MAKE) -C $(LIB)
+ft_printf/libftprintf.a: $(wildcard ft_printf/*.c)
+	@$(MAKE) -C $(PFLIB)
 
 clean:
 	@printf "Cleaning $(YELLOW)$(BOLD)$(NAME)$(END)$(END_TPUT)...\n"
@@ -62,7 +64,7 @@ clean:
 	@rm -rf obj
 
 fclean:	clean
-	@make fclean -C $(LIB)
+	@make fclean -C $(PFLIB)
 	@rm -rf $(NAME) test
 
 test: test.c $(NAME)

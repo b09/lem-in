@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/05/26 16:05:16 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/31 20:42:02 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # define FT_LEMIN
 
 #include "libft.h"
+#include "ft_printf.h"
 #include <stdbool.h>
 
 # define ANTS		obj->ants
@@ -56,6 +57,7 @@ typedef	struct		s_room
 	char			*name;
 	int				coord_x;
 	int				coord_y;
+	int				ant;
 	
 	struct s_room	*next;
 	struct s_room	*previous;
@@ -170,9 +172,12 @@ void			print_multiple_paths(t_obj *obj);
 **	lem-in.c
 */
 int				init_lists_and_print(t_obj *obj);
-int				solver(t_obj *obj);
 void			print_heuristic_level(t_obj *obj);
 void			connect_everything(t_obj *obj);
+void			assign_total_steps_to_paths(t_obj *obj);
+void			assign_min_ants_for_use_of_paths(t_obj *obj);
+int				get_number_of_paths(t_obj *obj);
+void			move_and_print_ants(t_obj *obj);
 
 
 

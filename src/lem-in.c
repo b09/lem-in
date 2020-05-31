@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/05/26 20:59:18 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/31 22:35:56 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,94 +20,68 @@ int				main(void)
 	ft_bzero(&obj, sizeof(obj));
 	if (init_lists_and_print(&obj))
 	{
-		// solver(&obj);
-		// solver(&obj);
-		// solver(&obj);
-		// solver(&obj);
-		// solver(&obj);
 		connect_everything(&obj);
-		print_multiple_paths(&obj);
+		assign_total_steps_to_paths(&obj);
+		assign_min_ants_for_use_of_paths(&obj);
+		// print_multiple_paths(&obj);
+		move_and_print_ants(&obj);
 	}
 	delete_all(&obj);
 	return (0);
 }
 
-void			print_heuristic_level(t_obj *obj)
+void			assign_total_steps_to_paths(t_obj *obj)
 {
-	int			level;
-	t_link		*links;
+	t_room 		*room;
+	int			steps;
 
-	level = 0;
-	links = END_RM->start_link;
-	while (links)
+	steps = 0;
+	room = NULL;
+	START_RM->links = START_RM->start_link;
+	while (START_RM->links)
 	{
-		printf(C_RED"\n%s()1: %d\n"C_RESET, __func__, level);
-		if (links->room->path && links->room->path->level > 0)
-			level += links->room->path->level;
-		links = links->next;
-		printf(C_RED"\n%s()2: %d\n"C_RESET, __func__, level);
+		if (START_RM->links->room->path)
+		{
+			room = START_RM->links->room;
+			steps = 1;
+			while (room != END_RM)
+			{
+				room = room->path->child_room;
+				++steps;
+			}
+			START_RM->links->room->path->path_total_steps = steps;
+		}
+		START_RM->links = START_RM->links->next;
 	}
-	printf(C_BLUE"\n%s(): %d\n"C_RESET, __func__, level);
 }
 
-int				solver(t_obj *obj)
-{
-	// printf("************\n\n");
-	breadth_first_search(obj);
-	// print_queue_from_qend(obj);
-	// printf("%s() Line: %d\n\n", __func__, __LINE__);
-	
-
-	printf("end_rm->queue after bfs():%s path:%p queueu:%p\n", QEND->current_room->name, END_RM->path, END_RM->queue);
-	if (QSTART)
-	{
-		// print_tqueue_lst(obj);
-
-		printf("inside assign_path(), recursive\n");
-		assign_path(obj, QEND);
-		printf("\ndelete_tqueue_nodes()\n\n");
-		delete_tqueue_nodes(obj, QSTART);
-
-		printf("qend before connect_tqueue:%d\n", QEND->level);
-		connect_tqueue_nodes(obj);//, QEND->current_room, 0);
-		print_heuristic_level(obj);
-		printf("qend after connect_tqueue:%p\n", QEND);
-		// printf("\n");
-		print_multiple_paths(obj);
-	}
-	return (1);
-}
 void			connect_everything(t_obj *obj)
 {
-	printf("inside %s\n", __func__);
 	double		steps;
 	double		steps2;
-	// double		possible_steps;
 	int			paths;
 	int			combined_length_of_paths;
 
-	paths = 1;
 	breadth_first_search(obj);
+	paths = 1;
 	if (QEND && QEND->current_room == END_RM && ANTS >= paths)
 	{
-		// steps = QEND->level;
 		combined_length_of_paths = QEND->level;
-		steps = ceil((ANTS - paths + combined_length_of_paths) / paths);
-		// possible_steps = steps;
+		steps = ceil((ANTS - paths + combined_length_of_paths) / paths); // MUST REWRITE LINE
 		steps2 = steps;
 		assign_path(obj, QEND);
 		delete_tqueue_nodes(obj, QSTART);
 		connect_tqueue_nodes(obj);
-		print_multiple_paths(obj);
+		// print_multiple_paths(obj);
 	}
 	else
 	{
-		printf("first return\n");
+		// falls into else if qend is not endrm or ants are less than paths which could only be 1
+		// ft_printf("first return\n");
 		return ;
 	}
 	while (ANTS >= paths)
 	{
-		printf("paths:%d combined_length:%d steps:%f steps2:%f\n\n", paths, combined_length_of_paths, steps, steps2);
 		breadth_first_search(obj);
 		++paths;
 		if (QEND && QEND->current_room == END_RM && ANTS >= paths)
@@ -119,18 +93,18 @@ void			connect_everything(t_obj *obj)
 				assign_path(obj, QEND);
 				delete_tqueue_nodes(obj, QSTART);
 				connect_tqueue_nodes(obj);
-				print_multiple_paths(obj);
+				// print_multiple_paths(obj);
 				steps2 = steps;
 			}
 			else
 			{
-				printf("second return steps:%f steps2:%f\n", steps, steps2);
+				// ft_printf("second return steps:%f steps2:%f\n", steps, steps2);
 				return ;
 			}
 		}
 		else
 		{
-			printf("third return\n");
+			// ft_printf("third return\n");
 			return ;
 		}
 	}
@@ -146,7 +120,6 @@ void			connect_everything(t_obj *obj)
 **	assign the same number to them, but also increase that second counter
 **	based on the number of current paths that can handle ants
 */
-
 int				get_number_of_paths(t_obj *obj)
 {
 	int			paths;
@@ -162,37 +135,20 @@ int				get_number_of_paths(t_obj *obj)
 	return (paths);
 }
 
-
-void			dispatch_ants(t_obj *obj)
+void			assign_min_ants_for_use_of_paths(t_obj *obj)
 {
 	int			steps;
 	int			ants;
-	int			*ant_counter;
+	int			ant_counter;
 	int			paths;
 
 	steps = 1;
 	ants = 1;
 	ant_counter = 0;
 	paths = get_number_of_paths(obj);
-	START_RM->links = START_RM->start_link;
 	while (paths)
 	{
-		// while paths, which are decremented
-		// check if any of the paths has a length equal to the current number of steps
-		// which if there is, start counting ants and incrementing the number of ants
-		// by the ant_counter for every increased step
-		//		and for every path that does match the current number of steps
-		//		increase the ant_counter by one
-		paths = check_all_paths(obj, steps, paths, ant_counter);
-		ants += *ant_counter;
-		++steps;
-	}
-
-
-		int		ant_counter_copy;
-
-		ant_counter_copy = ant_counter;
-
+		START_RM->links = START_RM->start_link;
 		while (START_RM->links && paths)
 		{
 			if (START_RM->links->room->path && !START_RM->links->room->path->min_ants)
@@ -200,18 +156,16 @@ void			dispatch_ants(t_obj *obj)
 				if (START_RM->links->room->path->path_total_steps == steps)
 				{
 					START_RM->links->room->path->min_ants = ants;
-					++*(ant_counter);
+					++ant_counter;
 					--paths;
-					// START_RM->links = START_RM->start_link;
 				}
 			}
 			START_RM->links = START_RM->links->next;
 		}
+		++steps;
+		ants += ant_counter;
+	}
 }
-
-
-
-
 
 int				init_lists_and_print(t_obj *obj)
 {
@@ -219,13 +173,82 @@ int				init_lists_and_print(t_obj *obj)
 		create_tlink_lst(obj) && check_duplicate_rooms_and_coordinates(obj))
 		{
 			print_tstr_lst(obj);
-			// print_troom_lst(obj);
-			print_tlink_lst(obj);
-			printf("number of END_RM links:%d\n", count_links(END_RM->start_link));
+			// // print_troom_lst(obj);
+			// print_tlink_lst(obj);
+			// ft_printf("number of END_RM links:%d\n", count_links(END_RM->start_link));
 			return (1);
 		}
 	delete_all(obj);
 	return (0);
 }
 
+void			move_and_print_ants(t_obj *obj)
+{
+	t_room		*room;
+	int			*current_ant;
+	int			*end_rm_ants;
+	int			ants_copy;
 
+	ants_copy = ANTS;
+	*current_ant = 1;
+	*end_rm_ants = 0;
+	room = NULL;
+	while (*end_rm_ants < ants_copy)
+	{
+		END_RM->links = END_RM->start_link;
+		while (END_RM->links && END_RM->links->room)
+		{
+			room = END_RM->links->room;
+			while (room->path)
+			{
+				if (room->ant)
+				{
+					ft_printf("L%d-%s ", room->ant, room->path->child_room->name);
+					*end_rm_ants += room->path->child_room == END_RM ? 1 : 0;
+					room->path->child_room->ant = room->ant;
+					room->ant = 0;
+				}
+				if (ANTS && room->path->parent_room == START_RM)
+				{
+					if (room->path->min_ants <= ANTS)
+					{
+						ft_printf("L%d-%s ", current_ant, room->name);
+						room->ant = current_ant;
+						--ANTS;
+						++current_ant;
+					}
+					break ;
+				}
+				room = room->path->parent_room;
+			}
+			END_RM->links = END_RM->links->next;
+		}
+		ft_putchar('\n');
+	}
+}
+
+void			check_paths_for_ants(t_obj *obj, int *end_rm_ants, int *current_ant)
+{
+	while (room->path)
+	{
+		if (room->ant)
+		{
+			ft_printf("L%d-%s ", room->ant, room->path->child_room->name);
+			end_rm_ants += room->path->child_room == END_RM ? 1 : 0;
+			room->path->child_room->ant = room->ant;
+			room->ant = 0;
+		}
+		if (ANTS && room->path->parent_room == START_RM)
+		{
+			if (room->path->min_ants <= ANTS)
+			{
+				ft_printf("L%d-%s ", current_ant, room->name);
+				room->ant = current_ant;
+				--ANTS;
+				++current_ant;
+			}
+			break ;
+		}
+		room = room->path->parent_room;
+	}
+}

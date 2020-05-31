@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/20 12:12:33 by macbook       #+#    #+#                 */
-/*   Updated: 2020/05/24 20:24:21 by macbook       ########   odam.nl         */
+/*   Updated: 2020/05/31 20:29:48 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,8 +232,8 @@ void			breadth_first_search(t_obj *obj)
 			check_room_add_to_queue(obj);
 			if (check_endrm(obj))
 			{
-				print_queue_from_qend(obj);
-				QEND ? printf(C_RED"after bfs QEND:%d\n"C_RESET, QEND->level): printf(C_RED"no qend after bfs()\n"C_RESET);
+				// print_queue_from_qend(obj);
+				// QEND ? printf(C_RED"after bfs QEND:%d\n"C_RESET, QEND->level): printf(C_RED"no qend after bfs()\n"C_RESET);
 				// print_multiple_paths(obj);
 				return ;
 			}
@@ -281,7 +281,7 @@ void			print_queue_from_qend(t_obj *obj)
 
 void			delete_tqueue_nodes(t_obj *obj, t_queue *queue)
 {
-	printf("parent:%-7s name: %-7s on_path:%d\n", queue->parent_room->name, queue->current_room->name, queue->q_on_path);
+	// printf("parent:%-7s name: %-7s on_path:%d\n", queue->parent_room->name, queue->current_room->name, queue->q_on_path);
 	if (queue != QEND)
 		delete_tqueue_nodes(obj, queue->next_queue);
 	queue->parent_links_child->on_queue_outgoing = 0;
