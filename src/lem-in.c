@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/05/31 22:35:56 by macbook       ########   odam.nl         */
+/*   Updated: 2020/06/19 15:37:15 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,9 +173,9 @@ int				init_lists_and_print(t_obj *obj)
 		create_tlink_lst(obj) && check_duplicate_rooms_and_coordinates(obj))
 		{
 			print_tstr_lst(obj);
-			// // print_troom_lst(obj);
-			// print_tlink_lst(obj);
-			// ft_printf("number of END_RM links:%d\n", count_links(END_RM->start_link));
+			print_troom_lst(obj);
+			print_tlink_lst(obj);
+			ft_printf("number of END_RM links:%d\n", count_links(END_RM->start_link));
 			return (1);
 		}
 	delete_all(obj);
@@ -185,15 +185,16 @@ int				init_lists_and_print(t_obj *obj)
 void			move_and_print_ants(t_obj *obj)
 {
 	t_room		*room;
-	int			*current_ant;
-	int			*end_rm_ants;
+	int			current_ant;
+	int			end_rm_ants;
 	int			ants_copy;
 
 	ants_copy = ANTS;
-	*current_ant = 1;
-	*end_rm_ants = 0;
+	current_ant = 1;
+	end_rm_ants = 0;
 	room = NULL;
-	while (*end_rm_ants < ants_copy)
+
+	while (end_rm_ants < ants_copy)
 	{
 		END_RM->links = END_RM->start_link;
 		while (END_RM->links && END_RM->links->room)
@@ -204,7 +205,7 @@ void			move_and_print_ants(t_obj *obj)
 				if (room->ant)
 				{
 					ft_printf("L%d-%s ", room->ant, room->path->child_room->name);
-					*end_rm_ants += room->path->child_room == END_RM ? 1 : 0;
+					end_rm_ants += room->path->child_room == END_RM ? 1 : 0;
 					room->path->child_room->ant = room->ant;
 					room->ant = 0;
 				}
@@ -227,28 +228,28 @@ void			move_and_print_ants(t_obj *obj)
 	}
 }
 
-void			check_paths_for_ants(t_obj *obj, int *end_rm_ants, int *current_ant)
-{
-	while (room->path)
-	{
-		if (room->ant)
-		{
-			ft_printf("L%d-%s ", room->ant, room->path->child_room->name);
-			end_rm_ants += room->path->child_room == END_RM ? 1 : 0;
-			room->path->child_room->ant = room->ant;
-			room->ant = 0;
-		}
-		if (ANTS && room->path->parent_room == START_RM)
-		{
-			if (room->path->min_ants <= ANTS)
-			{
-				ft_printf("L%d-%s ", current_ant, room->name);
-				room->ant = current_ant;
-				--ANTS;
-				++current_ant;
-			}
-			break ;
-		}
-		room = room->path->parent_room;
-	}
-}
+// void			check_paths_for_ants(t_obj *obj, int *end_rm_ants, int *current_ant)
+// {
+// 	while (room->path)
+// 	{
+// 		if (room->ant)
+// 		{
+// 			ft_printf("L%d-%s ", room->ant, room->path->child_room->name);
+// 			end_rm_ants += room->path->child_room == END_RM ? 1 : 0;
+// 			room->path->child_room->ant = room->ant;
+// 			room->ant = 0;
+// 		}
+// 		if (ANTS && room->path->parent_room == START_RM)
+// 		{
+// 			if (room->path->min_ants <= ANTS)
+// 			{
+// 				ft_printf("L%d-%s ", current_ant, room->name);
+// 				room->ant = current_ant;
+// 				--ANTS;
+// 				++current_ant;
+// 			}
+// 			break ;
+// 		}
+// 		room = room->path->parent_room;
+// 	}
+// }

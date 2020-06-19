@@ -1,26 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_pow.c                                           :+:    :+:            */
+/*   ft_atol.c                                          :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/12/11 21:47:01 by bprado        #+#    #+#                 */
-/*   Updated: 2019/12/11 21:49:11 by bprado        ########   odam.nl         */
+/*   Created: 2020/06/10 15:10:18 by bprado        #+#    #+#                 */
+/*   Updated: 2020/06/10 16:00:34 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-long double		ft_pow(float nbr, float exp)
+long	ft_atol(const char *str)
 {
-	float	holder;
+	long long int	i;
+	int				j;
 
-	holder = nbr;
-	while (exp > 0)
+	i = 0;
+	j = 1;
+	while ((*str > 0) && (*str < 33) && (*str != 27))
+		++str;
+	if ((*str == 43) || (*str == 45))
 	{
-		nbr *= holder;
-		--exp;
+		if (*str == 45)
+		{
+			j = -j;
+		}
+		++str;
 	}
-	return (nbr);
+	while ((*str > 47) && (*str < 58))
+	{
+		i = (i * 10) + (*str - 48);
+		++str;
+	}
+	return ((long)i * j);
 }

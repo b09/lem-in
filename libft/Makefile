@@ -6,7 +6,7 @@
 #    By: bprado <bprado@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/01/29 17:19:55 by bprado        #+#    #+#                  #
-#    Updated: 2020/04/10 17:15:50 by macbook       ########   odam.nl          #
+#    Updated: 2020/06/19 18:35:43 by bprado        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,34 +37,33 @@ BOLD := `tput bold`
 UNDERLINE := `tput smul`
 END_TPUT := `tput sgr0`
 
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
+
 
 all: $(NAME)
 
-begin_statement:
-	@printf "$(BOLD) *** Compiling $(NAME) ***$(END_TPUT)\n"
+# begin_statement:
+# 	@printf "$(BOLD) *** Compiling $(NAME) ***$(END_TPUT)\n"
 
-$(NAME): begin_statement $(OBJ)
+# $(NAME): begin_statement $(OBJ)
+$(NAME): $(OBJ)
 	@printf " -- libft obj files done. --\n"
 	@ar rcs $(NAME) $(OBJ)
 	@printf " $(CYAN)$(BOLD)$(UNDERLINE)$(NAME)$(END)$(END_TPUT) created\n"
 
 obj/%.o: src/%.c inc/libft.h
 	@mkdir -p obj
-	@printf " $(GREEN)$(BOLD)✔$(END)$(END_TPUT) Object file for $(PURPLE)$<$(END)\n"
+	@printf " $(GREEN)$(BOLD)✔$(END)$(END_TPUT) Object file for \
+	$(PURPLE)$(current_dir)/$<$(END)\n"
 	@$(CC) -o $@ -c $< $(CFLAGS) -I inc -I .
 
 clean:
-	@printf "Cleaning $(YELLOW)$(BOLD)$(NAME)$(END)$(END_TPUT)..."
+	@printf "Cleaning$(BOLD)   libft object files$(END_TPUT)\n"
 	@rm -rf obj
-	@printf " complete!\n"
 
 fclean: clean
+	@printf "Deleting$(YELLOW)$(BOLD)   $(NAME)$(END)$(END_TPUT)\n"
 	@rm -rf $(NAME)
 
 re: fclean all
-
-# %.o: %.c
-# 	@gcc $(FLAG) -c $< -o $@
-
-# The name of the first prerequisite
-# The file name of the target of the rule.

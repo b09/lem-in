@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/05/31 20:42:02 by macbook       ########   odam.nl         */
+/*   Updated: 2020/06/19 19:45:29 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define ANTS		obj->ants
 # define START_RM	obj->start_room
 # define END_RM		obj->end_room
-# define ROOM		obj->chain_current
+# define ROOM		obj->c_room
 # define TSTR_L		obj->tstr_current_str
 # define TSTR_STRT	obj->tstr_start
 # define CSTART		obj->chain_start
@@ -71,6 +71,7 @@ typedef	struct		s_room
 	
 	// bool			on_queue_outgoing;
 	// bool			room_on_path;
+	bool			dead_end;
 	int				level;
 	struct s_queue	*queue;
 	struct s_queue	*path;
@@ -124,7 +125,7 @@ typedef struct		s_obj
 	// identified
 	t_room			*chain_start;
 	t_room			*chain_end;
-	t_room			*chain_current;
+	t_room			*c_room;
 
 	t_room			*start_room;
 	t_room			*end_room;

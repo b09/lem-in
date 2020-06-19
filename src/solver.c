@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/20 12:12:33 by macbook       #+#    #+#                 */
-/*   Updated: 2020/05/31 20:29:48 by macbook       ########   odam.nl         */
+/*   Updated: 2020/06/19 19:23:36 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ int				check_endrm(t_obj *obj)
 void			check_room_add_to_queue(t_obj *obj)
 {
 		// printf("%s() line:%d ROOM->links->room:%s\n", __func__, __LINE__, ROOM->links->room->name);
-	if (ROOM->links->room != START_RM)
+	if (ROOM->links->room != START_RM && ROOM->links->room->dead_end == 0)
 	{
 		if (ROOM->links->lnk_queue != 0)
 		{

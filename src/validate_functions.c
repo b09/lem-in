@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 14:24:47 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/27 20:34:27 by macbook       ########   odam.nl         */
+/*   Updated: 2020/06/19 20:21:58 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int				validate_link(char *str)
 	dash = 0;
 	while (str[i])
 	{
-		if ((!ft_isprint(str[i]) && str[i] != '-' && str[i] != '\n') || \
+		if ((!ft_isprint(str[i]) && str[i] != '\n') || \
 			(i == 0 && str[i] == '-') || (str[i] == ' '))
 			return (0);
 		if (str[i] == '-')
@@ -73,7 +73,12 @@ int				validate_string_list(char *str)
 	{
 		if (str[i] != '\n' && (!ft_isprint(str[i]) || (i == 0 && str[i] == ' ')))
 		{
-			ft_putstr_fd("Error, invalid character in line\n", 0);
+			ft_putstr_fd("Error, invalid character in line\n", 2);
+			return (0);
+		}
+		if (str[i] == 'L' && str[i + 1] == ' ')
+		{
+			ft_putstr_fd("Error, room named >> L << not permitted\n", 2);
 			return (0);
 		}
 		if (str[i] == '#' && i == 0)
@@ -85,7 +90,7 @@ int				validate_string_list(char *str)
 		}
 		if (spaces > 0 && !ft_isdigit(str[i]) && str[i] != '\n')
 		{
-			ft_putstr_fd("Error, coordinate is not a digit\n", 0);
+			ft_putstr_fd("Error, coordinate is not a digit\n", 2);
 			return (0);
 		}
 		++i;
@@ -99,17 +104,26 @@ int				validate_string_list(char *str)
 int				validate_first_line(t_obj *obj)
 {
 	int			i;
+	int			characters;
 
+	characters = 0;
 	i = 0;
+	TSTR_L = TSTR_STRT;
+	while (STR[i] == '#')
+		TSTR_L = TSTR_L->next;
 	while (STR[i])
 	{
 		if (!ft_isdigit(STR[i]) && STR[i] != '\n')
 		{
-			ft_putstr_fd("Error, first line not a digit or has zero ants\n", 0);
+			ft_putstr_fd("Error, first line not a digit or has zero ants\n", 2);
 			return (0);
 		}
+		++characters;
 		++i;
 	}
+	if (characters > 10 || (ft_atol(&STR[i - characters]) > INT32_MAX ||\
+	ft_atol(&STR[i - characters]) < INT32_MIN))
+		return (0);
 	ANTS = ft_atoi(STR);
 	TSTR_L = TSTR_L->next;
 	return (1);
@@ -154,4 +168,38 @@ int				check_duplicate_rooms_and_coordinates(t_obj *obj)
 		temp = temp->next;
 	}
 	return (check_duplicate_coordinates(obj));
+}
+
+
+
+/*
+**	iterate through all room-links-rooms that are dead_end == 0
+**	count links in each room, and if any room has only one link, 
+**	continue from room 1 to room 2, check its links, and if only 2
+**	links, continue until 3 links are found, or 1 ....
+**	ex: dead_end->room2->room1->start->roomA->roomB->end->roomY->roomZ->dead_end
+*/
+
+
+
+void			remove_dead_ends(t_obj *obj)
+{
+	t_room 		*room;
+	t_room		*dead_end;
+	int			link_count;
+
+	room = CSTART;
+	while (room)
+	{
+		if (room->start_link && !room->start_link->next)
+		{
+			dead_end = room->start_link->room;
+			while (count_links(dead_end->start_link) < 3)
+			{
+				dead_end = dead_end->start_link->room;
+			}
+		}
+		
+		room = room->next;
+	}
 }

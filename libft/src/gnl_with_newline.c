@@ -6,10 +6,9 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/09 12:48:31 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/16 15:11:35 by macbook       ########   odam.nl         */
+/*   Updated: 2020/06/07 17:03:03 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "libft.h"
 
@@ -23,7 +22,8 @@ static void		join_and_read(char **str, char **h, char buf[], int fd)
 
 static int		join_and_return(char **line, char **str, char **h, char buf[])
 {
-    char			*temp;
+	char			*temp;
+
 	*line = (!*str) ? ft_strjoin(*h, buf) : NULL;
 	(!*str) ? ft_strdel(&*h) : h;
 	if (!*str)

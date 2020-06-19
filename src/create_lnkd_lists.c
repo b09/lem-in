@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 13:51:15 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/27 20:37:23 by macbook       ########   odam.nl         */
+/*   Updated: 2020/06/19 19:15:03 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@
 **		struct s_str	*beginning_links;
 **
 **	get input from stdin with gnl_with_newline()
-**	malloc a t_str node and assign gnl() output to node->str
+**	malloc a t_str node and assign gnl() output to node->str,
 **	connect nodes
 */
+
 int				create_tstr_lst(t_obj *obj)
 {
 	char		*str;
@@ -56,14 +57,14 @@ int				create_tstr_lst(t_obj *obj)
 **		struct s_link	*start;
 **		struct s_link	*current;
 **		struct s_link	*next;
-**	
+**
 **	initial input to executable (./lemin) will be:
 **		number_of_ants
 **		the_rooms
 **		the_links
 **
 **	the_links will be a string in the form "room1-room2"
-**	every t_room node contains a t_link list 
+**	every t_room node contains a t_link list
 **	which is a list of rooms that said room connects to.
 **	func() will create a t_link node, assign the address
 **  of "room2" which "room1" connects to, and assign
@@ -71,6 +72,7 @@ int				create_tstr_lst(t_obj *obj)
 **	func() calls itself because if "room1-room2" then
 **	room1 needs a link to room2 and vice versa
 */
+
 void			create_tlink_node(t_room *link, t_room *room, char repeat)
 {
 	t_link		*new_node;
@@ -94,10 +96,9 @@ void			create_tlink_node(t_room *link, t_room *room, char repeat)
 		create_tlink_node(room, link, 0);
 }
 
-
 /*
 **	struct		s_room
-**	
+**
 **		char			*name;
 **		int				coord_x;
 **		int				coord_y;
@@ -108,6 +109,7 @@ void			create_tlink_node(t_room *link, t_room *room, char repeat)
 **	func() creates t_room node, assigns all members
 **	except *links
 */
+
 int				create_troom_node(t_obj *obj, int code)
 {
 	int			i;
@@ -141,10 +143,11 @@ int				create_troom_node(t_obj *obj, int code)
 **	the room that matches the name it seeks, will then return that found
 **	room's address
 */
+
 t_room			*get_troom_by_name(char *str, t_obj *obj)
 {
 	t_room		*temp;
-	
+
 	temp = CSTART;
 	while (temp)
 	{
@@ -162,17 +165,19 @@ t_room			*get_troom_by_name(char *str, t_obj *obj)
 **	while there are rooms, if a string (starting at the string
 **	that describes links) contains the name of the current room,
 **	make a t_link node for room1 to room2 and for room2 to room1
-**	
 */
+
 int				create_tlink_lst(t_obj *obj)
 {
-	t_room 		*temp;
-	t_room 		*temp2;
-	
+	t_room		*temp;
+	t_room		*temp2;
+
 	TSTR_L = LINKS_STRT;
-	while (TSTR_L && TSTR_L->next != NULL && validate_link(STR))
+	// while (TSTR_L && TSTR_L->next != NULL && validate_link(STR))
+	while (TSTR_L != NULL && validate_link(STR))
 		TSTR_L = TSTR_L->next;
-	if (TSTR_L->next != NULL && !validate_link(STR))
+	// if (TSTR_L->next != NULL && !validate_link(STR))
+	if (TSTR_L != NULL && !validate_link(STR))
 		return (0);
 	TSTR_L = LINKS_STRT;
 	while (TSTR_L != NULL)
@@ -181,6 +186,11 @@ int				create_tlink_lst(t_obj *obj)
 		{
 			temp = get_troom_by_name(STR, obj);
 			temp2 = get_troom_by_name(ft_strchr(STR, '-') + 1, obj);
+			if (!temp || !temp2 || temp == temp2)
+			{
+				ft_putstr_fd("Error, link not valid\n", 2);
+				return (0);
+			}
 			create_tlink_node(temp, temp2, 1);
 		}
 		TSTR_L = TSTR_L->next;
@@ -195,32 +205,32 @@ int				create_tlink_lst(t_obj *obj)
 **	"(char*)roomname (int)coord-x (int)coord-y". For every valid string
 **	a t_room node is created.
 */
+
 int				create_troom_lst(t_obj *obj)
 {
-	int			i;
+	int			val_str_code;
 
 	if (!validate_first_line(obj))
 		return (0);
-	i = 0;
+	val_str_code = 0;
 	while (TSTR_L && TSTR_L->next != NULL)
 	{
-		i = validate_string_list(STR);
-		if (i == 1)
-			create_troom_node(obj, i);
-		else if (i == 2 || i == 3)
+		val_str_code = validate_string_list(STR);
+		val_str_code == 1 && create_troom_node(obj, val_str_code);
+		if (val_str_code == 2 || val_str_code == 3)
 		{
 			TSTR_L = TSTR_L->next;
 			if (validate_string_list(STR))
-				create_troom_node(obj, i);
+				create_troom_node(obj, val_str_code);
 			else
 				return (0);
 		}
-		else if (i == 5)
+		else if (val_str_code == 5)
 		{
 			LINKS_STRT = TSTR_L;
 			return (1);
 		}
-		else if (i == 0)
+		else if (val_str_code == 0)
 			return (0);
 		TSTR_L = TSTR_L->next;
 	}
