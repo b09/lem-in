@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 14:24:47 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/19 20:21:58 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/21 20:00:10 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 	iterate thru string list starting from string that
 	is not a string describing rooms, just links
 */
+
 int				validate_link(char *str)
 {
 	int			i;
@@ -25,14 +26,19 @@ int				validate_link(char *str)
 	dash = 0;
 	while (str[i])
 	{
-		if ((!ft_isprint(str[i]) && str[i] != '\n') || \
-			(i == 0 && str[i] == '-') || (str[i] == ' '))
+		if (str[0] == '#')
+			break ;
+		if ((str[i] == ' ') || (!ft_isprint(str[i]) && str[i] != '\n') || \
+			(i == 0 && (str[i] == '\n' || str[i] == '-')))
+		{
+			printf("character:%d i:%d\n", str[i], i);
 			return (0);
+		}
 		if (str[i] == '-')
 			++dash;
 		++i;
 	}
-	if (dash != 1)
+	if (dash != 1 && str[0] != '#')
 		return (0);
 	return (5);
 }
@@ -42,6 +48,7 @@ int				validate_link(char *str)
 **	return different ints depeding on whether str is ##start
 **	##end or comment beginning with #
 */
+
 int				validate_comment(char *str)
 {
 	if (ft_strcmp(str, "##start\n") == 0)
@@ -62,6 +69,7 @@ int				validate_comment(char *str)
 **		4 = normal comment, ignore
 **		5 = str describes a link
 */
+
 int				validate_string_list(char *str)
 {
 	int			i;
@@ -99,7 +107,6 @@ int				validate_string_list(char *str)
 		return (validate_link(str));
 	return (1);
 }
-
 
 int				validate_first_line(t_obj *obj)
 {
@@ -170,8 +177,6 @@ int				check_duplicate_rooms_and_coordinates(t_obj *obj)
 	return (check_duplicate_coordinates(obj));
 }
 
-
-
 /*
 **	iterate through all room-links-rooms that are dead_end == 0
 **	count links in each room, and if any room has only one link, 
@@ -180,26 +185,26 @@ int				check_duplicate_rooms_and_coordinates(t_obj *obj)
 **	ex: dead_end->room2->room1->start->roomA->roomB->end->roomY->roomZ->dead_end
 */
 
-
-
-void			remove_dead_ends(t_obj *obj)
+int				remove_dead_end_paths(t_obj *obj, t_room *all_rooms, t_room *current_room, t_room *parent, t_room *temp)
 {
-	t_room 		*room;
-	t_room		*dead_end;
-	int			link_count;
 
-	room = CSTART;
-	while (room)
+	while (all_rooms != CEND)
 	{
-		if (room->start_link && !room->start_link->next)
+		if (all_rooms->start_link && !all_rooms->start_link->next && all_rooms != END_RM && all_rooms != START_RM)
 		{
-			dead_end = room->start_link->room;
-			while (count_links(dead_end->start_link) < 3)
+			current_room = all_rooms->start_link->room;
+			parent = all_rooms;
+			while (current_room != START_RM && current_room != END_RM && count_links(current_room->start_link) == 2)
 			{
-				dead_end = dead_end->start_link->room;
+				temp = current_room;
+				current_room = current_room->start_link->room == parent ? current_room->start_link->next->room : current_room->start_link->room;
+				parent = temp;
+
 			}
+			if (current_room == START_RM || current_room == END_RM || count_links(current_room->start_link) > 2)
+				parent->dead_end = 1;
 		}
-		
-		room = room->next;
+		all_rooms = all_rooms->next;
 	}
+	return (1);
 }

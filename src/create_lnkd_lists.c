@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 13:51:15 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/19 19:15:03 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/21 19:33:36 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,11 @@ int				create_tlink_lst(t_obj *obj)
 		TSTR_L = TSTR_L->next;
 	// if (TSTR_L->next != NULL && !validate_link(STR))
 	if (TSTR_L != NULL && !validate_link(STR))
+	{
+		printf("inside %s \nstr: [%s]\n", __func__, STR);
+		ft_putstr_fd("Error, not a valid link\n", 2);
 		return (0);
+	}
 	TSTR_L = LINKS_STRT;
 	while (TSTR_L != NULL)
 	{

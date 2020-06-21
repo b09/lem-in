@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/19 19:45:29 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/21 16:50:44 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,8 @@ int				validate_string_list(char *str);
 int				validate_first_line(t_obj *obj);
 int				check_duplicate_rooms_and_coordinates(t_obj *obj);
 int				check_duplicate_coordinates(t_obj *obj);
+int				remove_dead_end_paths(t_obj *obj, t_room *all_rooms, t_room *current_room, t_room *parent, t_room *temp);
+
 
 
 

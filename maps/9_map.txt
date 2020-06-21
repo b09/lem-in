@@ -10,14 +10,22 @@ H 0 8
 I 0 9
 J 0 10
 K 0 12
-L 0 13
+Lo1 0 13
+Lo2 2 13
+Lo3 3 13
+Lo4 4 13
+Lo5 5 13
 M 0 16
 ##start
 start 0 14
 ##end
 end 0 15
-M-L
-L-start
+M-Lo1
+Lo1-start
+Lo2-start
+Lo3-start
+Lo4-start
+Lo5-start
 start-B
 start-A
 B-C

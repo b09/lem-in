@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/05/31 20:43:28 by macbook       ########   odam.nl         */
+/*   Updated: 2020/06/21 18:40:50 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void			print_troom_lst(t_obj *obj)
 	while (ROOM)
 	{
 		// ft_printf("ROOM:%p, name:%s, coord_x:%d, coord_y:%d\nstart_rm:%p end_rm:%p\n", ROOM, ROOM->name, ROOM->coord_x, ROOM->coord_y, START_RM, END_RM);
-		ft_printf("ROOM:%p, name:%s, coord_x:%d, coord_y:%d\n", ROOM, ROOM->name, ROOM->coord_x, ROOM->coord_y);
+		ft_printf("ROOM:%p, name:%s, coord_x:%d, coord_y:%d dead_end:%d\n", ROOM, ROOM->name, ROOM->coord_x, ROOM->coord_y, ROOM->dead_end);
 		ROOM = ROOM->next;
 	}
 	ft_printf("\n");
