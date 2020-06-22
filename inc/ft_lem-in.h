@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/21 16:50:44 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/22 12:35:59 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 #include "libft.h"
 #include "ft_printf.h"
+#include "errors.h"
 #include <stdbool.h>
 
 # define ANTS		obj->ants
@@ -146,6 +147,7 @@ int				validate_first_line(t_obj *obj);
 int				check_duplicate_rooms_and_coordinates(t_obj *obj);
 int				check_duplicate_coordinates(t_obj *obj);
 int				remove_dead_end_paths(t_obj *obj, t_room *all_rooms, t_room *current_room, t_room *parent, t_room *temp);
+int				print_error(char *str);
 
 
 

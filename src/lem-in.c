@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/21 19:58:09 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/22 13:50:47 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ int				main(void)
 	t_obj 		obj;
 
 	ft_bzero(&obj, sizeof(obj));
-	if (init_lists_and_print(&obj))
+	if (create_tstr_lst(&obj) && create_troom_lst(&obj) && \
+		create_tlink_lst(&obj) && check_duplicate_rooms_and_coordinates(&obj)\
+		&& remove_dead_end_paths(&obj, obj.chain_start, 0, 0, 0))
 	{
+		print_tstr_lst(&obj);
 		connect_everything(&obj);
 		assign_total_steps_to_paths(&obj);
 		assign_min_ants_for_use_of_paths(&obj);
@@ -167,38 +170,7 @@ void			assign_min_ants_for_use_of_paths(t_obj *obj)
 	}
 }
 
-int				init_lists_and_print(t_obj *obj)
-{
-	printf("line%d\n", __LINE__);
-    // int ch;
-    // while ((ch = getchar()) != '\n' && ch != EOF)
-	// int		a;
-	// int		b;
-	// int		c;
-	// int		d;
-	// int		e;
 
-	// a = create_tstr_lst(obj);
-	// b = create_troom_lst(obj);
-	// c = create_tlink_lst(obj);
-	// d = check_duplicate_rooms_and_coordinates(obj);
-	// e = remove_dead_end_paths(obj, CSTART, 0, 0, 0);
-	// printf("a: %d  b: %d  c: %d  d: %d  e: %d\n", a, b, c, d, e);
-	// if (a && b && c && d && e)
-	
-	if (create_tstr_lst(obj) && create_troom_lst(obj) && \
-		create_tlink_lst(obj) && check_duplicate_rooms_and_coordinates(obj) && \
-		remove_dead_end_paths(obj, CSTART, 0, 0, 0))
-		{
-			print_tstr_lst(obj);
-			// print_troom_lst(obj);
-			// print_tlink_lst(obj);
-			// ft_printf("number of END_RM links:%d\n", count_links(END_RM->start_link));
-			return (1);
-		}
-	delete_all(obj);
-	return (0);
-}
 
 void			move_and_print_ants(t_obj *obj)
 {
@@ -244,4 +216,37 @@ void			move_and_print_ants(t_obj *obj)
 		}
 		ft_putchar('\n');
 	}
+}
+
+	// printf("line%d\n", __LINE__);
+    // int ch;
+    // while ((ch = getchar()) != '\n' && ch != EOF)
+	// int		a;
+	// int		b;
+	// int		c;
+	// int		d;
+	// int		e;
+
+	// a = create_tstr_lst(obj);
+	// b = create_troom_lst(obj);
+	// c = create_tlink_lst(obj);
+	// d = check_duplicate_rooms_and_coordinates(obj);
+	// e = remove_dead_end_paths(obj, CSTART, 0, 0, 0);
+	// printf("a: %d  b: %d  c: %d  d: %d  e: %d\n", a, b, c, d, e);
+	// if (a && b && c && d && e)
+int				init_lists_and_print(t_obj *obj)
+{
+	
+	if (create_tstr_lst(obj) && create_troom_lst(obj) && \
+		create_tlink_lst(obj) && check_duplicate_rooms_and_coordinates(obj) && \
+		remove_dead_end_paths(obj, CSTART, 0, 0, 0))
+		{
+			print_tstr_lst(obj);
+			// print_troom_lst(obj);
+			// print_tlink_lst(obj);
+			// ft_printf("number of END_RM links:%d\n", count_links(END_RM->start_link));
+			return (1);
+		}
+	delete_all(obj);
+	return (0);
 }

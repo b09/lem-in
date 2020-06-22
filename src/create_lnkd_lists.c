@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 13:51:15 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/21 19:33:36 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/22 13:53:20 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int				create_tstr_lst(t_obj *obj)
 		TSTR_L = TSTR_STRT;
 		return (1);
 	}
-	return (0);
+	return (print_error(NO_INPUT));
 }
 
 /*
@@ -173,16 +173,10 @@ int				create_tlink_lst(t_obj *obj)
 	t_room		*temp2;
 
 	TSTR_L = LINKS_STRT;
-	// while (TSTR_L && TSTR_L->next != NULL && validate_link(STR))
 	while (TSTR_L != NULL && validate_link(STR))
 		TSTR_L = TSTR_L->next;
-	// if (TSTR_L->next != NULL && !validate_link(STR))
 	if (TSTR_L != NULL && !validate_link(STR))
-	{
-		printf("inside %s \nstr: [%s]\n", __func__, STR);
-		ft_putstr_fd("Error, not a valid link\n", 2);
-		return (0);
-	}
+		return (print_error(BAD_LINK));
 	TSTR_L = LINKS_STRT;
 	while (TSTR_L != NULL)
 	{
@@ -191,10 +185,7 @@ int				create_tlink_lst(t_obj *obj)
 			temp = get_troom_by_name(STR, obj);
 			temp2 = get_troom_by_name(ft_strchr(STR, '-') + 1, obj);
 			if (!temp || !temp2 || temp == temp2)
-			{
-				ft_putstr_fd("Error, link not valid\n", 2);
-				return (0);
-			}
+				return (print_error(NO_RM_LINK));
 			create_tlink_node(temp, temp2, 1);
 		}
 		TSTR_L = TSTR_L->next;
@@ -214,28 +205,24 @@ int				create_troom_lst(t_obj *obj)
 {
 	int			val_str_code;
 
-	if (!validate_first_line(obj))
-		return (0);
+	validate_first_line(obj);
 	val_str_code = 0;
 	while (TSTR_L && TSTR_L->next != NULL)
 	{
 		val_str_code = validate_string_list(STR);
-		val_str_code == 1 && create_troom_node(obj, val_str_code);
-		if (val_str_code == 2 || val_str_code == 3)
+		if (val_str_code == 1)
+			create_troom_node(obj, val_str_code);
+		else if (val_str_code == 2 || val_str_code == 3)
 		{
 			TSTR_L = TSTR_L->next;
-			if (validate_string_list(STR))
-				create_troom_node(obj, val_str_code);
-			else
-				return (0);
+			validate_string_list(STR);
+			create_troom_node(obj, val_str_code);
 		}
 		else if (val_str_code == 5)
 		{
 			LINKS_STRT = TSTR_L;
 			return (1);
 		}
-		else if (val_str_code == 0)
-			return (0);
 		TSTR_L = TSTR_L->next;
 	}
 	return (1);
