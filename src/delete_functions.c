@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/16 17:41:22 by macbook       #+#    #+#                 */
-/*   Updated: 2020/04/28 20:31:42 by macbook       ########   odam.nl         */
+/*   Updated: 2020/06/24 19:07:35 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ void			delete_tlink_lst(t_link **list)
 
 void			delete_all(t_obj *obj)
 {
-	if (TSTR_L)
-		delete_string_lst(&TSTR_L);
-	if (CSTART)
-		delete_troom_lst(&CSTART);
+	if (obj->tstr)
+		delete_string_lst(&obj->tstr);
+	if (obj->head_rm)
+		delete_troom_lst(&obj->head_rm);
 	exit(1);
 }

@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/22 12:30:38 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/22 13:57:22 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/24 16:04:51 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,6 @@
 # define DUP_COOR		"Error, there are two rooms with the same coordinates\n"
 # define NO_INPUT		"Error, no input\n"
 # define NO_RM_LINK		"Error, link describe a nonexistent room\n"
+# define LRG_COOR       "Error, integer for coordinate is to large\n"
 
 #endif

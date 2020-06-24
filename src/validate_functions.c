@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 14:24:47 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/22 14:11:02 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/24 19:14:21 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int				validate_string_list(char *str)
 	{
 		if (str[i] != '\n' && (!ft_isprint(str[i]) || (!i && str[i] == ' ')))
 			return (print_error(BAD_CHAR));
-		if (str[i] == 'L' && str[i + 1] == ' ')
+		if (str[0] == 'L' && str[1] && str[1] == ' ')
 			return (print_error(BAD_L));
 		if (str[i] == '#' && i == 0)
 			return (validate_comment(str));
@@ -90,20 +90,12 @@ int				validate_string_list(char *str)
 		if (spaces > 0 && !ft_isdigit(str[i]) && str[i] != '\n')
 			return (print_error(BAD_COOR));
 		++i;
+		if (ft_numlen(str) > 10)
+			return (print_error(LRG_COOR));
 	}
 	if (spaces != 2)
 		return (validate_link(str));
 	return (1);
-}
-
-int				ft_numlen(char *str)
-{
-	int 		i;
-
-	i = 0;
-	while (str[i] && (ft_isdigit(str[i]) || (i == 0 && str[i] == '-')))
-		++i;
-	return (i);
 }
 
 int				validate_first_line(t_obj *obj)
@@ -113,21 +105,21 @@ int				validate_first_line(t_obj *obj)
 
 	characters = 0;
 	i = 0;
-	TSTR_L = TSTR_STRT;
-	while (STR[i] == '#')
-		TSTR_L = TSTR_L->next;
-	while (STR[i])
+	obj->tstr = obj->head_tstr;
+	while (obj->tstr->str[i] == '#')
+		obj->tstr = obj->tstr->next;
+	while (obj->tstr->str[i])
 	{
-		if (!ft_isdigit(STR[i]) && STR[i] != '\n')
+		if (!ft_isdigit(obj->tstr->str[i]) && obj->tstr->str[i] != '\n')
 			return (print_error(NOT_DIGIT));
 		++characters;
 		++i;
 	}
-	if (characters > 10 || (ft_atol(&STR[i - characters]) > INT32_MAX ||\
-	ft_atol(&STR[i - characters]) < INT32_MIN) || ft_atol(STR) == 0)
+	if (characters > 10 || (ft_atol(&obj->tstr->str[i - characters]) > INT32_MAX ||\
+	ft_atol(&obj->tstr->str[i - characters]) < INT32_MIN) || ft_atol(obj->tstr->str) == 0)
 		return (print_error(ZERO_ANTS));
-	ANTS = ft_atoi(STR);
-	TSTR_L = TSTR_L->next;
+	obj->ants = ft_atoi(obj->tstr->str);
+	obj->tstr = obj->tstr->next;
 	return (1);
 }
 
@@ -135,18 +127,18 @@ int				check_duplicate_coordinates(t_obj *obj)
 {
 	t_room		*temp;
 
-	temp = CSTART;
+	temp = obj->head_rm;
 	while (temp)
 	{
-		ROOM = temp->next;
-		while (ROOM && temp)
+		obj->room = temp->next;
+		while (obj->room && temp)
 		{
-			if (ROOM->coord_x == temp->coord_x)
+			if (obj->room->coord_x == temp->coord_x)
 			{
-				if (ROOM->coord_y == temp->coord_y)
+				if (obj->room->coord_y == temp->coord_y)
 					return (print_error(DUP_COOR));
 			}
-			ROOM = ROOM->next;
+			obj->room = obj->room->next;
 		}
 		temp = temp->next;
 	}
@@ -157,15 +149,15 @@ int				check_duplicate_rooms_and_coordinates(t_obj *obj)
 {
 	t_room		*temp;
 
-	temp = CSTART;
+	temp = obj->head_rm;
 	while (temp)
 	{
-		ROOM = temp->next;
-		while (ROOM && temp)
+		obj->room = temp->next;
+		while (obj->room && temp)
 		{
-			if (ft_strcmp(ROOM->name, temp->name) == 0)
+			if (ft_strcmp(obj->room->name, temp->name) == 0)
 				return (print_error(DUP_NAME));
-			ROOM = ROOM->next;
+			obj->room = obj->room->next;
 		}
 		temp = temp->next;
 	}
@@ -183,23 +175,23 @@ int				check_duplicate_rooms_and_coordinates(t_obj *obj)
 int				remove_dead_end_paths(t_obj *obj, t_room *all_rooms, \
 				t_room *cur_room, t_room *parent, t_room *temp)
 {
-	while (all_rooms != CEND)
+	while (all_rooms != obj->head_rm)
 	{
-		if (all_rooms->start_link && !all_rooms->start_link->next && all_rooms\
-		!= END_RM && all_rooms != START_RM)
+		if (all_rooms->head_lnk && !all_rooms->head_lnk->next && all_rooms\
+		!= obj->end_room && all_rooms != obj->start_room)
 		{
-			cur_room = all_rooms->start_link->room;
+			cur_room = all_rooms->head_lnk->room;
 			parent = all_rooms;
-			while (cur_room != START_RM && cur_room != END_RM &&\
-			count_links(cur_room->start_link) == 2)
+			while (cur_room != obj->start_room && cur_room != obj->end_room &&\
+			count_links(cur_room->head_lnk) == 2)
 			{
 				temp = cur_room;
-				cur_room = cur_room->start_link->room == parent ?\
-				cur_room->start_link->next->room : cur_room->start_link->room;
+				cur_room = cur_room->head_lnk->room == parent ?\
+				cur_room->head_lnk->next->room : cur_room->head_lnk->room;
 				parent = temp;
 			}
-			if (cur_room == START_RM || cur_room == END_RM ||\
-			count_links(cur_room->start_link) > 2)
+			if (cur_room == obj->start_room || cur_room == obj->end_room ||\
+			count_links(cur_room->head_lnk) > 2)
 				parent->dead_end = 1;
 		}
 		all_rooms = all_rooms->next;

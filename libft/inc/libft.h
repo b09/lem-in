@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/01/29 17:27:40 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/10 15:11:10 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/24 16:18:28 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int					ft_tolower(int c);
 int					ft_toupper(int c);
 int					ft_wordcnt(char const *s, char c);
 int					get_next_line(int fd, char **line);
+int					ft_numlen(char *str);
 void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 void				ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void				ft_lstdelone(t_list **alst, void(*del)(void *, size_t));
