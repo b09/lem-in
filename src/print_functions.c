@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/24 19:55:55 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/25 13:33:36 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void			print_tqueue_lst(t_obj *obj)
 	if (obj->head_q == NULL)
 		return ;
 	obj->room = obj->head_q->room;
-	while (obj->room != obj->q_end->room)
+	while (obj->room != obj->tail_q->room)
 	{
 		if (obj->room->queue && obj->room->queue->child_room)
 			ft_printf("parent room: %s links to current room: " C_BLUE "%s " C_RESET "next:%s	q addr: %p  level:%d\n", obj->room->queue->prnt_rm->name, obj->room->name, obj->room->queue->child_room->name, obj->room->queue, obj->room->level);
@@ -141,4 +141,24 @@ void			print_heuristic_level(t_obj *obj)
 		ft_printf(C_RED"\n%s()2: %d\n"C_RESET, __func__, level);
 	}
 	ft_printf(C_BLUE"\n%s(): %d\n"C_RESET, __func__, level);
+}
+
+void			print_queue_from_qend(t_obj *obj)
+{
+	t_queue		*queue;
+
+	ft_printf("%s()\n", __func__);
+	queue = obj->head_q;
+	while (queue)
+	{
+		queue->room && ft_printf("level: %d current room:%s ", queue->level,\
+		queue->room->name);
+		queue->prnt_rm && ft_printf("parent: %s ", queue->prnt_rm->name);
+		queue->child_room && ft_printf("child: %s ", queue->child_room->name);
+		ft_printf("\n");
+		if (queue == obj->curr_q)
+			ft_printf(C_BLUE"	^^^^^ QHEAD ^^^^\n"C_RESET);
+		queue = queue->next;
+	}
+	ft_printf("\n");
 }

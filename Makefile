@@ -6,7 +6,7 @@
 #    By: bprado <bprado@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/06/03 16:52:44 by bprado        #+#    #+#                  #
-#    Updated: 2020/06/19 20:22:42 by bprado        ########   odam.nl          #
+#    Updated: 2020/06/25 17:45:46 by bprado        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME		= lem-in
 
 # CFLAGS		= -Wall -Wextra -Werror
 
-SRC 		=	src/lem-in.c \
+SRC 		=	src/lem_in.c \
 				src/print_functions.c \
 				src/create_lnkd_lists.c \
 				src/validate_functions.c \

@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/24 19:55:41 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/25 18:30:54 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,35 +125,24 @@ typedef struct		s_obj
 	int				ants;
 	int				room_count;
 	
-	// t_str			*tstr_current_str;
 	t_str			*tstr;
-	// t_str			*tstr_start;
 	t_str			*head_tstr;
-	// t_str			*beginning_links;
 	t_str			*head_lnk;
 	// chain_start is an arbitrary start to the linked list
 	// but it guarantees to connect every node for easy deletion.
 	// the linked list may be created before start_room is
 	// identified
-	// t_room			*chain_start;
 	t_room			*head_rm;
-	// t_room			*chain_end;
 	t_room			*tail_rm;
-	// t_room			*c_room;
 	t_room			*room;
 
 	t_room			*start_room;
 	t_room			*end_room;
 
-	// t_queue			*q_start;
 	t_queue			*head_q;
-	// t_queue			*q_current;
+	t_queue			*temp_q;		//all in solver.c create_tqueue()
+	t_queue			*curr_q;		//all in solver.c create_tq() assign_level() check_room() bfs() print_queue()
 	t_queue			*tail_q;
-	// t_queue			*q_head;
-	t_queue			*curr_q;
-	// t_queue			*head_q;
-	t_queue			*q_end;
-	// t_queue			*tail_q;
 }					t_obj;
 
 /*
@@ -166,7 +155,7 @@ int				validate_string_list(char *str);
 int				validate_first_line(t_obj *obj);
 int				check_duplicate_rooms_and_coordinates(t_obj *obj);
 int				check_duplicate_coordinates(t_obj *obj);
-int				remove_dead_end_paths(t_obj *obj, t_room *all_rooms, t_room *current_room, t_room *parent, t_room *temp);
+int				remove_dead_end_paths(t_obj *obj, t_room *all_rooms, t_room *current_room, t_room *parent);
 int				print_error(char *str);
 
 /*
@@ -195,11 +184,11 @@ void			print_multiple_paths(t_obj *obj);
 
 int				init_lists_and_print(t_obj *obj);
 void			print_heuristic_level(t_obj *obj);
-void			connect_everything(t_obj *obj);
+void			connect_everything(t_obj *obj, double steps, double steps2, int paths);
 void			assign_total_steps_to_paths(t_obj *obj);
-void			assign_min_ants_for_use_of_paths(t_obj *obj);
+void			assign_min_ants_for_use_of_paths(t_obj *obj, int steps, int ants, int ant_counter);
 int				get_number_of_paths(t_obj *obj);
-void			move_and_print_ants(t_obj *obj);
+void			move_and_print_ants(t_obj *obj, int current_ant, int end_rm_ants, int ants_copy);
 
 /*
 **	create_lnkd_lists.c

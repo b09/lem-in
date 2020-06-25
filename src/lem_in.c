@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lem-in.c                                           :+:    :+:            */
+/*   lem_in.c                                           :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/24 19:55:51 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/25 18:43:27 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,19 @@
 
 int				main(void)
 {
-	t_obj 		obj;
+	t_obj		obj;
 
 	ft_bzero(&obj, sizeof(obj));
-	// if (create_tstr_lst(&obj) && create_troom_lst(&obj) && \
-	// 	create_tlink_lst(&obj) && check_duplicate_rooms_and_coordinates(&obj)\
-	// 	&& remove_dead_end_paths(&obj, obj.chain_start, 0, 0, 0))
-	init_lists_and_print(&obj);
+	if (create_tstr_lst(&obj) && create_troom_lst(&obj) && \
+		create_tlink_lst(&obj) && check_duplicate_rooms_and_coordinates(&obj)\
+		&& remove_dead_end_paths(&obj, obj.head_rm, 0, 0))
 	{
-		// print_tstr_lst(&obj);
-		connect_everything(&obj);
+		print_tstr_lst(obj);
+		connect_everything(&obj, 0, -1, 0);
 		assign_total_steps_to_paths(&obj);
-		assign_min_ants_for_use_of_paths(&obj);
+		assign_min_ants_for_use_of_paths(&obj, 1, 1, 0);
 		print_multiple_paths(&obj);
-		move_and_print_ants(&obj);
+		move_and_print_ants(&obj, 1, 0, obj.ants);
 	}
 	delete_all(&obj);
 	return (0);
@@ -36,7 +35,7 @@ int				main(void)
 
 void			assign_total_steps_to_paths(t_obj *obj)
 {
-	t_room 		*room;
+	t_room		*room;
 	int			steps;
 
 	steps = 0;
@@ -59,58 +58,44 @@ void			assign_total_steps_to_paths(t_obj *obj)
 	}
 }
 
-void			connect_everything(t_obj *obj)
+double			ft_ceil(double num)
 {
-	double		steps;
-	double		steps2;
-	int			paths;
-	int			combined_length_of_paths;
+	long long	temp;
 
-	breadth_first_search(obj);
-	paths = 1;
-	if (obj->q_end && obj->q_end->room == obj->end_room && obj->ants >= paths)
-	{
-		combined_length_of_paths = obj->q_end->level;
-		steps = ceil((obj->ants - paths + combined_length_of_paths) / paths); // MUST REWRITE LINE
-		steps2 = steps;
-		assign_path(obj, obj->q_end);
-		delete_tqueue_nodes(obj, obj->head_q);
-		connect_tqueue_nodes(obj);
-		// print_multiple_paths(obj);
-	}
+	temp = (long long)num;
+	if (temp == num)
+		return (temp);
 	else
-	{
-		// falls into else if qend is not endrm or ants are less than paths which could only be 1
-		// ft_printf("first return\n");
-		return ;
-	}
+		return (temp + 1);
+}
+
+void			connect_everything(t_obj *obj, double steps, double steps2,\
+				int paths)
+{
+	int			length_of_paths;
+
+	length_of_paths = 0;
 	while (obj->ants >= paths)
 	{
 		breadth_first_search(obj);
 		++paths;
-		if (obj->q_end && obj->q_end->room == obj->end_room && obj->ants >= paths)
+		if (obj->tail_q && obj->tail_q->room == obj->end_room &&\
+		obj->ants >= paths)
 		{
-			combined_length_of_paths += obj->q_end->level;
-			steps = ceil((obj->ants - paths + combined_length_of_paths) / paths); // MUST REWRITE LINE
-			if (steps < steps2)
+			length_of_paths += obj->tail_q->level;
+			steps = ft_ceil((obj->ants - paths + length_of_paths) / paths);
+			if (steps < steps2 || steps2 == -1)
 			{
-				assign_path(obj, obj->q_end);
+				assign_path(obj, obj->tail_q);
 				delete_tqueue_nodes(obj, obj->head_q);
 				connect_tqueue_nodes(obj);
-				// print_multiple_paths(obj);
-				steps2 = steps;
 			}
 			else
-			{
-				// ft_printf("second return steps:%f steps2:%f\n", steps, steps2);
 				return ;
-			}
+			steps2 = steps;
 		}
 		else
-		{
-			// ft_printf("third return\n");
 			return ;
-		}
 	}
 }
 
@@ -124,6 +109,7 @@ void			connect_everything(t_obj *obj)
 **	assign the same number to them, but also increase that second counter
 **	based on the number of current paths that can handle ants
 */
+
 int				get_number_of_paths(t_obj *obj)
 {
 	int			paths;
@@ -139,23 +125,19 @@ int				get_number_of_paths(t_obj *obj)
 	return (paths);
 }
 
-void			assign_min_ants_for_use_of_paths(t_obj *obj)
+void			assign_min_ants_for_use_of_paths(t_obj *obj, int steps,\
+int ants, int ant_counter)
 {
-	int			steps;
-	int			ants;
-	int			ant_counter;
 	int			paths;
 
-	steps = 1;
-	ants = 1;
-	ant_counter = 0;
 	paths = get_number_of_paths(obj);
 	while (paths)
 	{
 		obj->start_room->links = obj->start_room->head_lnk;
 		while (obj->start_room->links && paths)
 		{
-			if (obj->start_room->links->room->path && !obj->start_room->links->room->path->min_ants)
+			if (obj->start_room->links->room->path &&\
+			!obj->start_room->links->room->path->min_ants)
 			{
 				if (obj->start_room->links->room->path->path_len == steps)
 				{
@@ -171,20 +153,30 @@ void			assign_min_ants_for_use_of_paths(t_obj *obj)
 	}
 }
 
+void			move_and_print_ants_helper_1(t_obj *obj, int *end_rm_ants,\
+				t_room *room)
+{
+	ft_printf("L%d-%s ", room->ant, room->path->child_room->name);
+	*end_rm_ants += room->path->child_room == obj->end_room ? 1 : 0;
+	room->path->child_room->ant = room->ant;
+	room->ant = 0;
+}
 
+void			move_and_print_ants_helper_2(t_obj *obj, int *current_ant,\
+				t_room *room)
+{
+	ft_printf("L%d-%s ", *current_ant, room->name);
+	room->ant = *current_ant;
+	--obj->ants;
+	++(*current_ant);
+}
 
-void			move_and_print_ants(t_obj *obj)
+void			move_and_print_ants(t_obj *obj, int current_ant,\
+				int end_rm_ants, int ants_copy)
 {
 	t_room		*room;
-	int			current_ant;
-	int			end_rm_ants;
-	int			ants_copy;
 
-	ants_copy = obj->ants;
-	current_ant = 1;
-	end_rm_ants = 0;
 	room = NULL;
-
 	while (end_rm_ants < ants_copy)
 	{
 		obj->end_room->links = obj->end_room->head_lnk;
@@ -194,21 +186,11 @@ void			move_and_print_ants(t_obj *obj)
 			while (room->path)
 			{
 				if (room->ant)
-				{
-					ft_printf("L%d-%s ", room->ant, room->path->child_room->name);
-					end_rm_ants += room->path->child_room == obj->end_room ? 1 : 0;
-					room->path->child_room->ant = room->ant;
-					room->ant = 0;
-				}
+					move_and_print_ants_helper_1(obj, &end_rm_ants, room);
 				if (obj->ants && room->path->prnt_rm == obj->start_room)
 				{
 					if (room->path->min_ants <= obj->ants)
-					{
-						ft_printf("L%d-%s ", current_ant, room->name);
-						room->ant = current_ant;
-						--obj->ants;
-						++current_ant;
-					}
+						move_and_print_ants_helper_2(obj, &current_ant, room);
 					break ;
 				}
 				room = room->path->prnt_rm;
@@ -219,35 +201,17 @@ void			move_and_print_ants(t_obj *obj)
 	}
 }
 
-	// printf("line%d\n", __LINE__);
-    // int ch;
-    // while ((ch = getchar()) != '\n' && ch != EOF)
-	// int		a;
-	// int		b;
-	// int		c;
-	// int		d;
-	// int		e;
-
-	// a = create_tstr_lst(obj);
-	// b = create_troom_lst(obj);
-	// c = create_tlink_lst(obj);
-	// d = check_duplicate_rooms_and_coordinates(obj);
-	// e = remove_dead_end_paths(obj, obj->head_rm, 0, 0, 0);
-	// printf("a: %d  b: %d  c: %d  d: %d  e: %d\n", a, b, c, d, e);
-	// if (a && b && c && d && e)
 int				init_lists_and_print(t_obj *obj)
 {
-	
 	if (create_tstr_lst(obj) && create_troom_lst(obj) && \
 		create_tlink_lst(obj) && check_duplicate_rooms_and_coordinates(obj) && \
-		remove_dead_end_paths(obj, obj->head_rm, 0, 0, 0))
-		{
-			print_tstr_lst(obj);
-			print_troom_lst(obj);
-			print_tlink_lst(obj);
-			// ft_printf("number of obj->end_room links:%d\n", count_links(obj->end_room->head_lnk));
-			return (1);
-		}
+		remove_dead_end_paths(obj, obj->head_rm, 0, 0))
+	{
+		print_tstr_lst(obj);
+		print_troom_lst(obj);
+		print_tlink_lst(obj);
+		return (1);
+	}
 	delete_all(obj);
 	return (0);
 }

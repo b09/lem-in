@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 14:24:47 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/24 19:14:21 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/25 18:31:21 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,8 @@ int				validate_string_list(char *str)
 			return (print_error(BAD_L));
 		if (str[i] == '#' && i == 0)
 			return (validate_comment(str));
-		if (str[i] == ' ')
-		{
-			++spaces;
-			++i;
-		}
+		spaces += str[i] == ' ' ? 1 : 0;
+		i += str[i] == ' ' ? 1 : 0;
 		if (spaces > 0 && !ft_isdigit(str[i]) && str[i] != '\n')
 			return (print_error(BAD_COOR));
 		++i;
@@ -101,9 +98,9 @@ int				validate_string_list(char *str)
 int				validate_first_line(t_obj *obj)
 {
 	int			i;
-	int			characters;
+	int			chars;
 
-	characters = 0;
+	chars = 0;
 	i = 0;
 	obj->tstr = obj->head_tstr;
 	while (obj->tstr->str[i] == '#')
@@ -112,11 +109,12 @@ int				validate_first_line(t_obj *obj)
 	{
 		if (!ft_isdigit(obj->tstr->str[i]) && obj->tstr->str[i] != '\n')
 			return (print_error(NOT_DIGIT));
-		++characters;
+		++chars;
 		++i;
 	}
-	if (characters > 10 || (ft_atol(&obj->tstr->str[i - characters]) > INT32_MAX ||\
-	ft_atol(&obj->tstr->str[i - characters]) < INT32_MIN) || ft_atol(obj->tstr->str) == 0)
+	if (chars > 10 || (ft_atol(&obj->tstr->str[i - chars]) > INT32_MAX ||\
+	ft_atol(&obj->tstr->str[i - chars]) < INT32_MIN) || ft_atol(obj->tstr->str)\
+	== 0)
 		return (print_error(ZERO_ANTS));
 	obj->ants = ft_atoi(obj->tstr->str);
 	obj->tstr = obj->tstr->next;
@@ -173,8 +171,11 @@ int				check_duplicate_rooms_and_coordinates(t_obj *obj)
 */
 
 int				remove_dead_end_paths(t_obj *obj, t_room *all_rooms, \
-				t_room *cur_room, t_room *parent, t_room *temp)
+				t_room *cur_room, t_room *parent)
 {
+	t_room		*temp;
+
+	temp = NULL;
 	while (all_rooms != obj->head_rm)
 	{
 		if (all_rooms->head_lnk && !all_rooms->head_lnk->next && all_rooms\

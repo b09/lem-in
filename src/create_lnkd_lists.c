@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 13:51:15 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/24 19:16:48 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/25 18:23:28 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,10 @@ int				create_troom_node(t_obj *obj, int code)
 	while (obj->tstr->str[i] && obj->tstr->str[i] != ' ')
 		++i;
 	obj->room->name = ft_strndup(obj->tstr->str, i);
-	obj->room->coord_x = ft_atoi(&obj->tstr->str[i + 1]);// for space in string
+	obj->room->coord_x = ft_atoi(&obj->tstr->str[i + 1]);
 	while (obj->tstr->str[i + 1] && ft_isdigit(obj->tstr->str[i + 1]))
 		++i;
-	obj->room->coord_y = ft_atoi(&obj->tstr->str[i + 2]); // for second space
+	obj->room->coord_y = ft_atoi(&obj->tstr->str[i + 2]);
 	if (obj->head_rm == NULL)
 		obj->head_rm = obj->room;
 	else

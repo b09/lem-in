@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/22 12:30:38 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/24 16:04:51 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/25 16:41:54 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@
 # define NO_INPUT		"Error, no input\n"
 # define NO_RM_LINK		"Error, link describe a nonexistent room\n"
 # define LRG_COOR       "Error, integer for coordinate is to large\n"
+# define NO_PATH        "Error, no path found in map\n"
 
 #endif
