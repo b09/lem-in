@@ -6,14 +6,14 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/25 18:53:18 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/25 19:00:17 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/26 13:23:02 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_lem-in.h"
 
-static void			move_and_print_ants_helper_1(t_obj *obj, int *end_rm_ants,\
-				t_room *room)
+static void		move_and_print_ants_helper_1(t_obj *obj, int *end_rm_ants,\
+t_room *room)
 {
 	ft_printf("L%d-%s ", room->ant, room->path->child_room->name);
 	*end_rm_ants += room->path->child_room == obj->end_room ? 1 : 0;
@@ -21,8 +21,8 @@ static void			move_and_print_ants_helper_1(t_obj *obj, int *end_rm_ants,\
 	room->ant = 0;
 }
 
-static void			move_and_print_ants_helper_2(t_obj *obj, int *current_ant,\
-				t_room *room)
+static void		move_and_print_ants_helper_2(t_obj *obj, int *current_ant,\
+t_room *room)
 {
 	ft_printf("L%d-%s ", *current_ant, room->name);
 	room->ant = *current_ant;
@@ -31,7 +31,7 @@ static void			move_and_print_ants_helper_2(t_obj *obj, int *current_ant,\
 }
 
 void			move_and_print_ants(t_obj *obj, int current_ant,\
-				int end_rm_ants, int ants_copy)
+int end_rm_ants, int ants_copy)
 {
 	t_room		*room;
 

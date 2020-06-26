@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/16 17:41:22 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/25 18:23:04 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/26 13:13:56 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,12 @@ void			delete_all(t_obj *obj)
 	if (obj->head_rm)
 		delete_troom_lst(&obj->head_rm);
 	exit(1);
+}
+
+void			delete_tqueue_nodes(t_obj *obj, t_queue *queue)
+{
+	if (queue != obj->tail_q)
+		delete_tqueue_nodes(obj, queue->next);
+	if (queue->assign_to_path == 0)
+		ft_memdel((void*)&(queue));
 }

@@ -6,7 +6,7 @@
 #    By: bprado <bprado@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/06/03 16:52:44 by bprado        #+#    #+#                  #
-#    Updated: 2020/06/25 18:54:06 by bprado        ########   odam.nl          #
+#    Updated: 2020/06/26 16:51:23 by bprado        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRC 		=	src/lem_in.c \
 				src/validate_functions.c \
 				src/delete_functions.c \
 				src/move_ants.c \
+				src/helpers.c \
 				src/solver.c
 
 LIB 		= ./libft
@@ -63,7 +64,7 @@ $(NAME): $(OBJ) ft_printf/libftprintf.a
 	@$(CC) -o $@ $(CFLAGS) $(INC) $(OBJ) $(PFLIB_A)
 	@printf " $(CYAN)$(BOLD)$(UNDERLINE)./$(NAME)$(END)$(END_TPUT) created\n"
 
-obj/%.o: src/%.c inc/ft_lem-in.h
+obj/%.o: src/%.c inc/ft_lem_in.h
 	@mkdir -p obj
 	@printf " $(GREEN)$(BOLD)✔$(END)$(END_TPUT) Object file for \
 	$(PURPLE)$(current_dir)/$<$(END)\n"

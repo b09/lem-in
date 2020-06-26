@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 13:51:15 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/25 18:23:28 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/26 16:57:15 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@
 **	strutct t_str members:
 **		char			*str;
 **		struct s_str	*next;
-**		struct s_str	*beginning;
-**		struct s_str	*beginning_links;
 **
 **	get input from stdin with gnl_with_newline()
 **	malloc a t_str node and assign gnl() output to node->str,
 **	connect nodes
+**	func() will make a copy of the input (the map) from which a linked list
+**	rooms and a linked list of links is created later on. The copy of the input
+**	will be printed to the screen if validation checks are passed.
 */
 
 int				create_tstr_lst(t_obj *obj)
@@ -54,11 +55,10 @@ int				create_tstr_lst(t_obj *obj)
 /*
 **	strutct t_link members:
 **		t_room			*room;
-**		struct s_link	*start;
-**		struct s_link	*current;
+**		struct s_queue	*queue;
 **		struct s_link	*next;
 **
-**	initial input to executable (./lemin) will be:
+**	initial input to executable (./lemin) will be a map containing:
 **		number_of_ants
 **		the_rooms
 **		the_links
@@ -102,12 +102,18 @@ void			create_tlink_node(t_room *linked_rm, t_room *room, char repeat)
 **		char			*name;
 **		int				coord_x;
 **		int				coord_y;
+**		int				ant;
 **		struct s_room	*next;
 **		struct s_room	*previous;
 **		struct s_link	*links;
+**		struct s_link	*head_lnk;
+**		bool			dead_end;
+**		int				level;
+**		struct s_queue	*queue;
+**		struct s_queue	*path;
 **
-**	func() creates t_room node, assigns all members
-**	except *links
+**	func() creates t_room node, assigns some members, remainig members assigned
+**	later
 */
 
 int				create_troom_node(t_obj *obj, int code)
@@ -139,26 +145,6 @@ int				create_troom_node(t_obj *obj, int code)
 }
 
 /*
-**	func() will traverse the t_room linked list until it finds
-**	the room that matches the name it seeks, will then return that found
-**	room's address
-*/
-
-t_room			*get_troom_by_name(char *str, t_obj *obj)
-{
-	t_room		*temp;
-
-	temp = obj->head_rm;
-	while (temp)
-	{
-		if (!ft_memcmp(temp->name, str, ft_strlen(temp->name)))
-			return (temp);
-		temp = temp->next;
-	}
-	return (NULL);
-}
-
-/*
 **	func() will create a t_link linked list for every room
 **	by checking every line in the t_str linked list starting
 **	at the string where the link descriptions begin.
@@ -172,12 +158,12 @@ int				create_tlink_lst(t_obj *obj)
 	t_room		*temp;
 	t_room		*temp2;
 
-	obj->tstr = obj->head_lnk;
+	obj->tstr = obj->head_lnk_str;
 	while (obj->tstr != NULL && validate_link(obj->tstr->str))
 		obj->tstr = obj->tstr->next;
 	if (obj->tstr != NULL && !validate_link(obj->tstr->str))
 		return (print_error(BAD_LINK));
-	obj->tstr = obj->head_lnk;
+	obj->tstr = obj->head_lnk_str;
 	while (obj->tstr != NULL)
 	{
 		if (obj->tstr->str[0] != '#')
@@ -220,7 +206,7 @@ int				create_troom_lst(t_obj *obj)
 		}
 		else if (val_str_code == 5)
 		{
-			obj->head_lnk = obj->tstr;
+			obj->head_lnk_str = obj->tstr;
 			return (1);
 		}
 		obj->tstr = obj->tstr->next;

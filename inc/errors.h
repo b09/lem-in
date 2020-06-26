@@ -6,13 +6,13 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/22 12:30:38 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/25 16:41:54 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/26 16:04:30 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	LEMIN_ERRORS
+#ifndef ERRORS_H
 
-# define LEMIN_ERRORS
+# define ERRORS_H
 
 # define NOT_DIGIT		"Error, first line not a digit\n"
 # define ZERO_ANTS		"Error, zero ants or number is to large\n"
@@ -24,7 +24,7 @@
 # define DUP_COOR		"Error, there are two rooms with the same coordinates\n"
 # define NO_INPUT		"Error, no input\n"
 # define NO_RM_LINK		"Error, link describe a nonexistent room\n"
-# define LRG_COOR       "Error, integer for coordinate is to large\n"
-# define NO_PATH        "Error, no path found in map\n"
+# define LRG_COOR		"Error, integer for coordinate is to large\n"
+# define NO_PATH		"Error, no path found in map\n"
 
 #endif

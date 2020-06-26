@@ -6,13 +6,12 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/25 13:33:36 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/26 15:55:34 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_lem-in.h"
 
-// using ft_printf to print to screen
 void			print_tstr_lst(t_obj *obj)
 {
 	obj->tstr = obj->head_tstr;
@@ -20,11 +19,9 @@ void			print_tstr_lst(t_obj *obj)
 	{
 		while (obj->tstr->next != NULL)
 		{
-			// ft_printf("addr:%p beginning:%p string:%s", obj->tstr, obj->head_tstr, (obj->tstr->str));
 			ft_putstr(obj->tstr->str);
 			obj->tstr = obj->tstr->next;
 		}
-			// ft_printf("addr:%p beginning:%p string:%s\n\n", obj->tstr, obj->head_tstr, (obj->tstr->str));
 		ft_putstr(obj->tstr->str);
 		ft_putchar('\n');
 		ft_putchar('\n');
@@ -34,12 +31,13 @@ void			print_tstr_lst(t_obj *obj)
 
 void			print_troom_lst(t_obj *obj)
 {
-	obj->room = obj->head_rm;
 	ft_printf("%s()\n", __func__);
+	obj->room = obj->head_rm;
 	while (obj->room)
 	{
-		// ft_printf("ROOM:%p, name:%s, coord_x:%d, coord_y:%d\nobj->start_room:%p end_rm:%p\n", obj->room, obj->room->name, obj->room->coord_x, obj->room->coord_y, obj->start_room, obj->end_room);
-		ft_printf("obj->room:%p, name:%s, coord_x:%d, coord_y:%d dead_end:%d\n", obj->room, obj->room->name, obj->room->coord_x, obj->room->coord_y, obj->room->dead_end);
+		ft_printf("obj->room:%p, name:%s, coord_x:%d, coord_y:%d dead_end:%d\n"\
+		, obj->room, obj->room->name, obj->room->coord_x, obj->room->coord_y,\
+		obj->room->dead_end);
 		obj->room = obj->room->next;
 	}
 	ft_printf("\n");
@@ -56,20 +54,21 @@ void			print_tlink_lst(t_obj *obj)
 			obj->room->links = obj->room->head_lnk;
 			while (obj->room->links->next != NULL)
 			{
-				ft_printf("Room: %s links to: %s\n", obj->room->name, obj->room->links->room->name);
+				ft_printf("Room: %s links to: %s\n", obj->room->name,\
+				obj->room->links->room->name);
 				obj->room->links = obj->room->links->next;
 			}
-			ft_printf("Room: %s links to: %s\n\n", obj->room->name, obj->room->links->room->name);
+			ft_printf("Room: %s links to: %s\n\n", obj->room->name,\
+			obj->room->links->room->name);
 		}
 		obj->room = obj->room->next;
 	}
-	// ft_printf("exiting %s\n", __func__);
 }
-
 
 void			print_tqueue_lst(t_obj *obj)
 {
-	int 		i;
+	int			i;
+
 	i = 0;
 	ft_printf("%s()\n", __func__);
 	if (obj->head_q == NULL)
@@ -78,41 +77,43 @@ void			print_tqueue_lst(t_obj *obj)
 	while (obj->room != obj->tail_q->room)
 	{
 		if (obj->room->queue && obj->room->queue->child_room)
-			ft_printf("parent room: %s links to current room: " C_BLUE "%s " C_RESET "next:%s	q addr: %p  level:%d\n", obj->room->queue->prnt_rm->name, obj->room->name, obj->room->queue->child_room->name, obj->room->queue, obj->room->level);
+			ft_printf("parent room: %s links to current room: " C_BLUE "%s "\
+			C_RESET "next:%s	q addr: %p  level:%d\n",\
+			obj->room->queue->prnt_rm->name, obj->room->name,\
+			obj->room->queue->child_room->name, obj->room->queue,\
+			obj->room->level);
 		obj->room = obj->room->queue->child_room;
 	}
-	ft_printf("parent room: %s links to current room: %s next:%p	q addr: %p  level:%d\n", obj->room->queue->prnt_rm->name, obj->room->name, obj->room->queue->child_room, obj->room->queue, obj->room->level);
+	ft_printf("parent room: %s links to current room: %s next:%p	q addr: %p \
+	level:%d\n", obj->room->queue->prnt_rm->name, obj->room->name,\
+	obj->room->queue->child_room, obj->room->queue, obj->room->level);
 }
-
 
 void			print_tqueue_path(t_obj *obj, t_room *temp)
 {
-	// ft_printf("\n%s\n", __func__);
 	if (temp != obj->start_room)
 		print_tqueue_path(obj, temp->queue->prnt_rm);
 	ft_printf("Path to end room: %s\n", temp->name);
 }
 
-void			print_multiple_paths(t_obj *obj)
+void			print_multiple_paths(t_obj *obj, t_room *room,\
+t_link *links_startroom)
 {
 	ft_printf("\n%s\n", __func__);
-	t_room 		*room;
-	t_link 		*links_startroom;
-
 	links_startroom = obj->start_room->head_lnk;
 	while (links_startroom)
 	{
 		room = links_startroom->room;
-		// ft_printf("name: %s room->queue:%p\n", room->name, room->queue);
-		// ft_printf("name: %s room->path:%p\n", room->name, room->path);
 		if (room->path && room->path->prnt_rm == obj->start_room)
 			ft_printf("start room: %s\n", obj->start_room->name);
 		while (room && room->path)
 		{
 			if (room->path && room->path->child_room)
 			{
-				ft_printf("room: %s room->path:%p child_room:%s level:%d total_steps_of_path:%d min_ants:%d\n", room->name, room->path, room->path->child_room->name, room->path->level, room->path->path_len, room->path->min_ants);
-
+				ft_printf("room: %s room->path:%p child_room:%s level:%d\
+				total_steps_of_path:%d min_ants:%d\n", room->name, room->path,\
+				room->path->child_room->name, room->path->level,\
+				room->path->path_len, room->path->min_ants);
 				room = room->path->child_room;
 			}
 			else

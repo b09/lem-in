@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/20 12:12:33 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/25 13:01:47 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/26 13:20:38 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,40 +43,6 @@ void			create_tqueue_node(t_obj *obj)
 			obj->tail_q->next = obj->temp_q;
 	}
 	obj->tail_q = obj->temp_q;
-}
-
-int				assign_level(t_obj *obj)
-{
-	if (obj->curr_q)
-	{
-		if (obj->room->path && obj->room->path->prnt_rm ==\
-		obj->room->links->room)
-			return (obj->curr_q->level - 1);
-		else
-			return (obj->curr_q->level + 1);
-	}
-	return (1);
-}
-
-/*
-**	called in bfs() while loop
-**	will exit bfs() if func() returns 1
-**	Returns 1 if the current room links to end room (therefore end found)
-**	but not if link between current room and end room has been used before in
-**	previous bfs() call which resulted in a valid path.
-*/
-
-int				check_endrm(t_obj *obj)
-{
-	if (obj->room->links->room == obj->end_room)
-	{
-		if (obj->room->path && obj->room->path->child_room == obj->end_room)
-		{
-			return (0);
-		}
-		return (1);
-	}
-	return (0);
 }
 
 /*
@@ -129,22 +95,6 @@ void			check_room_add_to_queue(t_obj *obj)
 	}
 }
 
-int				check_parent_queue(t_obj *obj)
-{
-	t_link		*links;
-
-	links = obj->room->links->room->head_lnk;
-	while (links)
-	{
-		if (links->room == obj->room && links->queue)
-		{
-			return (1);
-		}
-		links = links->next;
-	}
-	return (0);
-}
-
 /*
 **	func() will create a queue of rooms
 **	each room will only be added to the queue once
@@ -171,21 +121,6 @@ void			breadth_first_search(t_obj *obj)
 		obj->curr_q = obj->curr_q ? obj->curr_q->next : obj->head_q;
 		obj->room = obj->curr_q ? obj->curr_q->room : NULL;
 	}
-}
-
-void			assign_path(t_obj *obj, t_queue *queue)
-{
-	queue->assign_to_path = 1;
-	if (queue && queue->prnt_rm != obj->start_room)
-		assign_path(obj, queue->parent_queue);
-}
-
-void			delete_tqueue_nodes(t_obj *obj, t_queue *queue)
-{
-	if (queue != obj->tail_q)
-		delete_tqueue_nodes(obj, queue->next);
-	if (queue->assign_to_path == 0)
-		ft_memdel((void*)&(queue));
 }
 
 void			connect_tqueue_nodes(t_obj *obj)

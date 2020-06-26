@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/25 18:53:40 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/26 14:17:25 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,22 @@ int				main(void)
 		connect_everything(&obj, 0, -1, 0);
 		assign_total_steps_to_paths(&obj);
 		assign_min_ants_for_use_of_paths(&obj, 1, 1, 0);
-		print_multiple_paths(&obj);
+		print_multiple_paths(&obj, 0, 0);
 		move_and_print_ants(&obj, 1, 0, obj.ants);
 	}
 	delete_all(&obj);
 	return (0);
 }
+
+/*
+**	all paths will go through rooms that link to startroom. as this is the case,
+**	if any of those rooms are on a path, the length of that path will be
+**	calculated and assigned to the room. this number will be used later on by
+**	a function which will dispath ants by iterating through the rooms that
+**	connect to the start_room and checking if the path is suitable for an ant
+**	based on the number of ants remaining in the start, and the length of each
+**	path
+*/
 
 void			assign_total_steps_to_paths(t_obj *obj)
 {
@@ -113,6 +123,14 @@ int				get_number_of_paths(t_obj *obj)
 	}
 	return (paths);
 }
+
+/*
+**	Ants are dispatched down paths, and as their numbers decrease from the start
+**	room, choosing the correct path (which may or may not be the shortest of the
+**	available paths) is important. The below func() will assign a number to a
+**	path which represents the minimum number of ants that should still be in the
+**	startroom in order to dispath an ant on said path.
+*/
 
 void			assign_min_ants_for_use_of_paths(t_obj *obj, int steps,\
 int ants, int ant_counter)
