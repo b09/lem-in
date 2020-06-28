@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 13:51:15 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/28 16:25:18 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 17:04:12 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,8 @@ int				create_tlink_lst(t_obj *obj)
 	t_room		*temp;
 	t_room		*temp2;
 
+	if (obj->flags != 3 || !obj->head_lnk_str)
+		obj->flags != 3 ? print_error(NO_CMMND) : print_error(NO_LINK);
 	obj->tstr = obj->head_lnk_str;
 	while (obj->tstr != NULL && validate_link(obj->tstr->str))
 		obj->tstr = obj->tstr->next;
@@ -195,14 +197,14 @@ int				create_troom_lst(t_obj *obj)
 	val_str_code = 0;
 	while (obj->tstr && obj->tstr->next != NULL)
 	{
-		val_str_code = validate_string_list(obj->tstr->str);
+		val_str_code = validate_string_list(obj->tstr->str, obj);
 		if (val_str_code == 1)
 			create_troom_node(obj, val_str_code);
 		else if (val_str_code == 2 || val_str_code == 3)
 		{
 			obj->tstr = obj->tstr->next;
-			validate_string_list(obj->tstr->str) == 1 ? create_troom_node(obj,\
-			val_str_code) : print_error(BAD_CMMND);
+			validate_string_list(obj->tstr->str, obj) == 1 ?\
+			create_troom_node(obj, val_str_code) : print_error(BAD_CMMND);
 		}
 		else if (val_str_code == 5)
 		{

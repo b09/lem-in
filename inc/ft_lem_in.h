@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/26 16:57:54 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 17:32:23 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 # define C_MAGENTA	"\x1b[35m"
 # define C_CYAN		"\x1b[36m"
 # define C_RESET	"\x1b[0m"
+
+# define START_CMMT	1
+# define END_CMMT	2
 
 /*
 **		----- struct t_room -----
@@ -115,6 +118,7 @@ typedef struct		s_str
 **		----- strtuct t_obj -----
 **	ants		=> number of ants in start room
 **	room_count	=> number of rooms on map
+**	flags		=> ensures ##start and ##end are active
 **	tstr		=> temp variable for a t_str node
 **	head_tstr	=> pointer to the start of t_str linked list
 **	head_lnk_str=> pointer to start of t_str describing links
@@ -132,6 +136,7 @@ typedef struct		s_obj
 {
 	int				ants;
 	int				room_count;
+	char			flags;
 	t_str			*tstr;
 	t_str			*head_tstr;
 	t_str			*head_lnk_str;
@@ -151,8 +156,8 @@ typedef struct		s_obj
 */
 
 int					validate_link(char *str);
-int					validate_comment(char *str);
-int					validate_string_list(char *str);
+int					validate_comment(char *str, t_obj *obj);
+int					validate_string_list(char *str, t_obj *obj);
 int					validate_first_line(t_obj *obj);
 int					check_duplicate_rooms_and_coordinates(t_obj *obj);
 int					check_duplicate_coordinates(t_obj *obj);
@@ -212,7 +217,7 @@ int					create_troom_lst(t_obj *obj);
 */
 
 void				create_tqueue_node(t_obj *obj);
-void				breadth_first_search(t_obj *obj);
+void				breadth_first_search(t_obj *obj, int paths);
 void				assign_path(t_obj *obj, t_queue *room);
 void				delete_tqueue_nodes(t_obj *obj, t_queue *queue);
 void				connect_tqueue_nodes(t_obj *obj);

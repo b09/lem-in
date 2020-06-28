@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/28 16:08:50 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 19:44:01 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,23 @@ int				main(void)
 	t_obj		obj;
 
 	ft_bzero(&obj, sizeof(obj));
-	if (create_tstr_lst(&obj) && create_troom_lst(&obj) && \
+	if (create_tstr_lst(&obj) && create_troom_lst(&obj) &&\
 		create_tlink_lst(&obj) && check_duplicate_rooms_and_coordinates(&obj)\
 		&& remove_dead_end_paths(&obj, obj.head_rm, 0, 0))
 	{
-		print_tstr_lst(&obj);
 		connect_everything(&obj, 0, -1, 0);
+		print_tstr_lst(&obj);
 		assign_total_steps_to_paths(&obj);
 		assign_min_ants_for_use_of_paths(&obj, 1, 1, 0);
-		// print_multiple_paths(&obj, 0, 0);
 		move_and_print_ants(&obj, 1, 0, obj.ants);
+		print_multiple_paths(&obj, 0, 0);
 	}
 	delete_all(&obj);
 	return (0);
 }
 
 /*
-**	all paths will go through rooms that link to startroom. as this is the case,
+**	all paths will go through rooms that link to startroom, and because of this,
 **	if any of those rooms are on a path, the length of that path will be
 **	calculated and assigned to the room. this number will be used later on by
 **	a function which will dispath ants by iterating through the rooms that
@@ -68,6 +68,11 @@ void			assign_total_steps_to_paths(t_obj *obj)
 	}
 }
 
+/*
+**	no paths are protected in breadth_first_search(), even though in the func()
+**	it appears they would fall into the else \n return;
+*/
+
 void			connect_everything(t_obj *obj, double steps, double steps2,\
 				int paths)
 {
@@ -76,7 +81,7 @@ void			connect_everything(t_obj *obj, double steps, double steps2,\
 	length_of_paths = 0;
 	while (obj->ants >= paths)
 	{
-		breadth_first_search(obj);
+		breadth_first_search(obj, paths);
 		++paths;
 		if (obj->tail_q && obj->tail_q->room == obj->end_room &&\
 		obj->ants >= paths)

@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 14:24:47 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/28 15:13:05 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 18:57:14 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,18 @@ int				validate_link(char *str)
 **	##end or comment beginning with #
 */
 
-int				validate_comment(char *str)
+int				validate_comment(char *str, t_obj *obj)
 {
 	if (ft_strcmp(str, "##start\n") == 0)
+	{
+		obj->flags |= START_CMMT;
 		return (2);
+	}
 	else if (ft_strcmp(str, "##end\n") == 0)
+	{
+		obj->flags |= END_CMMT;
 		return (3);
+	}
 	else
 		return (4);
 }
@@ -67,7 +73,7 @@ int				validate_comment(char *str)
 **		5 = str describes a link
 */
 
-int				validate_string_list(char *str)
+int				validate_string_list(char *str, t_obj *obj)
 {
 	int			i;
 	int			spaces;
@@ -81,13 +87,13 @@ int				validate_string_list(char *str)
 		if (str[0] == 'L' && str[1] && str[1] == ' ')
 			return (print_error(BAD_L));
 		if (str[i] == '#' && i == 0)
-			return (validate_comment(str));
+			return (validate_comment(str, obj));
 		spaces += str[i] == ' ' ? 1 : 0;
 		i += str[i] == ' ' ? 1 : 0;
 		if (spaces > 0 && !ft_isdigit(str[i]) && str[i] != '\n')
 			return (print_error(BAD_COOR));
 		++i;
-		if (ft_numlen(str) > 10)
+		if (spaces && ft_numlen(&str[i]) > 10)
 			return (print_error(LRG_COOR));
 	}
 	if (spaces != 2)

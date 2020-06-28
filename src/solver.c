@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/20 12:12:33 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/28 15:13:05 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 18:32:07 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void			check_room_add_to_queue(t_obj *obj)
 **	will not be added to the queue if that room is on path WITH THE SAME EDGE
 */
 
-void			breadth_first_search(t_obj *obj)
+void			breadth_first_search(t_obj *obj, int paths)
 {
 	obj->curr_q = NULL;
 	obj->room = obj->start_room;
@@ -121,6 +121,8 @@ void			breadth_first_search(t_obj *obj)
 		obj->curr_q = obj->curr_q ? obj->curr_q->next : obj->head_q;
 		obj->room = obj->curr_q ? obj->curr_q->room : NULL;
 	}
+	if (!paths && (!obj->tail_q || obj->tail_q->room != obj->end_room))
+		print_error(NO_PATH);
 }
 
 void			connect_tqueue_nodes(t_obj *obj)

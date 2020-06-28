@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/28 15:13:05 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 19:08:37 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void			print_tstr_lst(t_obj *obj)
 			obj->tstr = obj->tstr->next;
 		}
 		ft_putstr(obj->tstr->str);
-		ft_putchar('\n');
 		ft_putchar('\n');
 		obj->tstr = obj->head_tstr;
 	}

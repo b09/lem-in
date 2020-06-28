@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/26 13:10:28 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/28 15:13:05 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 17:32:53 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,7 @@ int				check_endrm(t_obj *obj)
 	if (obj->room->links->room == obj->end_room)
 	{
 		if (obj->room->path && obj->room->path->child_room == obj->end_room)
-		{
 			return (0);
-		}
 		return (1);
 	}
 	return (0);
