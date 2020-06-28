@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/22 12:30:38 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/26 16:04:30 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 16:24:03 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@
 # define NO_RM_LINK		"Error, link describe a nonexistent room\n"
 # define LRG_COOR		"Error, integer for coordinate is to large\n"
 # define NO_PATH		"Error, no path found in map\n"
+# define BAD_CMMND		"Error, string after ##start or ##end is not valid\n"
 
 #endif

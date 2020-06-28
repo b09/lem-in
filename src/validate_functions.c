@@ -6,11 +6,11 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 14:24:47 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/25 18:31:21 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 15:13:05 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_lem-in.h"
+#include "ft_lem_in.h"
 
 /*
 **	iterate thru string list starting from string that
@@ -121,47 +121,6 @@ int				validate_first_line(t_obj *obj)
 	return (1);
 }
 
-int				check_duplicate_coordinates(t_obj *obj)
-{
-	t_room		*temp;
-
-	temp = obj->head_rm;
-	while (temp)
-	{
-		obj->room = temp->next;
-		while (obj->room && temp)
-		{
-			if (obj->room->coord_x == temp->coord_x)
-			{
-				if (obj->room->coord_y == temp->coord_y)
-					return (print_error(DUP_COOR));
-			}
-			obj->room = obj->room->next;
-		}
-		temp = temp->next;
-	}
-	return (1);
-}
-
-int				check_duplicate_rooms_and_coordinates(t_obj *obj)
-{
-	t_room		*temp;
-
-	temp = obj->head_rm;
-	while (temp)
-	{
-		obj->room = temp->next;
-		while (obj->room && temp)
-		{
-			if (ft_strcmp(obj->room->name, temp->name) == 0)
-				return (print_error(DUP_NAME));
-			obj->room = obj->room->next;
-		}
-		temp = temp->next;
-	}
-	return (check_duplicate_coordinates(obj));
-}
-
 /*
 **	iterate through all room-links-rooms that are dead_end == 0
 **	count links in each room, and if any room has only one link,
@@ -198,10 +157,4 @@ int				remove_dead_end_paths(t_obj *obj, t_room *all_rooms, \
 		all_rooms = all_rooms->next;
 	}
 	return (1);
-}
-
-int				print_error(char *str)
-{
-	ft_putstr_fd(str, 2);
-	exit(0);
 }

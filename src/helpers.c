@@ -6,11 +6,11 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/26 13:10:28 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/26 13:15:35 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 15:13:05 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_lem-in.h"
+#include "ft_lem_in.h"
 
 /*
 **	func() will traverse the t_room linked list until it finds

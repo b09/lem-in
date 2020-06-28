@@ -6,11 +6,11 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/26 14:17:25 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 16:08:50 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_lem-in.h"
+#include "ft_lem_in.h"
 #include <math.h>
 
 int				main(void)
@@ -26,7 +26,7 @@ int				main(void)
 		connect_everything(&obj, 0, -1, 0);
 		assign_total_steps_to_paths(&obj);
 		assign_min_ants_for_use_of_paths(&obj, 1, 1, 0);
-		print_multiple_paths(&obj, 0, 0);
+		// print_multiple_paths(&obj, 0, 0);
 		move_and_print_ants(&obj, 1, 0, obj.ants);
 	}
 	delete_all(&obj);

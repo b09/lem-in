@@ -6,11 +6,11 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/20 12:12:33 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/26 13:20:38 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 15:13:05 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_lem-in.h"
+#include "ft_lem_in.h"
 
 /*
 **  creates a node for linked list which is a queue

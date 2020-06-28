@@ -6,11 +6,11 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/26 15:55:34 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 15:13:05 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_lem-in.h"
+#include "ft_lem_in.h"
 
 void			print_tstr_lst(t_obj *obj)
 {
@@ -162,4 +162,10 @@ void			print_queue_from_qend(t_obj *obj)
 		queue = queue->next;
 	}
 	ft_printf("\n");
+}
+
+int				print_error(char *str)
+{
+	ft_putstr_fd(str, 2);
+	exit(0);
 }

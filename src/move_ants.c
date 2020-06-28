@@ -6,11 +6,11 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/25 18:53:18 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/26 13:23:02 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 15:13:05 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_lem-in.h"
+#include "ft_lem_in.h"
 
 static void		move_and_print_ants_helper_1(t_obj *obj, int *end_rm_ants,\
 t_room *room)

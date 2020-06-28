@@ -6,11 +6,11 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 13:51:15 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/26 16:57:15 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/28 16:25:18 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_lem-in.h"
+#include "ft_lem_in.h"
 
 /*
 **	strutct t_str members:
@@ -201,8 +201,8 @@ int				create_troom_lst(t_obj *obj)
 		else if (val_str_code == 2 || val_str_code == 3)
 		{
 			obj->tstr = obj->tstr->next;
-			validate_string_list(obj->tstr->str);
-			create_troom_node(obj, val_str_code);
+			validate_string_list(obj->tstr->str) == 1 ? create_troom_node(obj,\
+			val_str_code) : print_error(BAD_CMMND);
 		}
 		else if (val_str_code == 5)
 		{
