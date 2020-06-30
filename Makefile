@@ -6,13 +6,14 @@
 #    By: bprado <bprado@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/06/03 16:52:44 by bprado        #+#    #+#                  #
-#    Updated: 2020/06/28 17:35:48 by bprado        ########   odam.nl          #
+#    Updated: 2020/06/30 20:12:15 by bprado        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= lem-in
 
 CFLAGS		= -Wall -Wextra -Werror -g
+# CFLAGS		= -g
 
 SRC 		=	src/lem_in.c \
 				src/print_functions.c \

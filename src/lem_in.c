@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/28 20:35:09 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/30 19:34:37 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ int				main(void)
 		&& remove_dead_end_paths(&obj, obj.head_rm, 0, 0))
 	{
 		connect_everything(&obj, 0, -1, 0);
-		// print_tstr_lst(&obj);
+		print_tstr_lst(&obj);
 		assign_total_steps_to_paths(&obj);
 		assign_min_ants_for_use_of_paths(&obj, 1, 1, 0);
 		move_and_print_ants(&obj, 1, 0, obj.ants);
-		print_multiple_paths(&obj, 0, 0);
+		// print_multiple_paths(&obj, 0, 0);
 	}
 	delete_all(&obj);
 	return (0);
@@ -71,9 +71,9 @@ void			assign_total_steps_to_paths(t_obj *obj)
 /*
 **	no paths are protected in breadth_first_search(), even though in the func()
 **	it appears they would fall into the else \n return;
+// THE ISSUE IS IN tail_q NOT HAVING ANY VALUE
 */
 
-// THE ISSUE IS IN tail_q NOT HAVING ANY VALUE
 void			connect_everything(t_obj *obj, double steps, double steps2,\
 				int paths)
 {
@@ -84,12 +84,9 @@ void			connect_everything(t_obj *obj, double steps, double steps2,\
 	{
 		breadth_first_search(obj, paths);
 		++paths;
-				printf("q_end: %p\n", obj->tail_q);
-
 		if (obj->tail_q && obj->tail_q->room == obj->end_room &&\
 		obj->ants >= paths)
 		{
-			printf("line:%d paths: %d\n", __LINE__, paths);
 			length_of_paths += obj->tail_q->level;
 			steps = ft_ceil((obj->ants - paths + length_of_paths) / paths);
 			if (steps < steps2 || steps2 == -1)

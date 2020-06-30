@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/20 12:12:33 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/28 18:32:07 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/30 16:22:47 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void			create_tqueue_node(t_obj *obj)
 	obj->temp_q = ft_memalloc(sizeof(t_queue));
 	obj->temp_q->prnt_rm = obj->room;
 	obj->temp_q->parent_queue = obj->curr_q;
+	obj->temp_q->parent_tlink_to_child = obj->room->links;
 	obj->room->links->queue = obj->temp_q;
 	obj->temp_q->room = obj->room->links->room;
 	obj->temp_q->room->queue = obj->temp_q;
@@ -35,8 +36,7 @@ void			create_tqueue_node(t_obj *obj)
 			obj->temp_q->next = obj->curr_q->next;
 			obj->curr_q->next = obj->temp_q;
 			obj->temp_q->parent_queue = obj->curr_q;
-			if (!obj->temp_q->next)
-				obj->tail_q = obj->temp_q;
+			obj->tail_q = obj->temp_q->next ? obj->tail_q : obj->temp_q;
 			return ;
 		}
 		else

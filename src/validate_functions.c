@@ -6,11 +6,12 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/15 14:24:47 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/28 18:57:14 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/30 20:13:04 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_lem_in.h"
+// #include "limits.h" //delete this
 
 /*
 **	iterate thru string list starting from string that
@@ -118,6 +119,9 @@ int				validate_first_line(t_obj *obj)
 		++chars;
 		++i;
 	}
+	// if (chars > 10 || (ft_atol(&obj->tstr->str[i - chars]) > INT_MAX ||\
+	// ft_atol(&obj->tstr->str[i - chars]) < INT_MIN) || ft_atol(obj->tstr->str)\
+	// == 0)				// for valgrind on docker
 	if (chars > 10 || (ft_atol(&obj->tstr->str[i - chars]) > INT32_MAX ||\
 	ft_atol(&obj->tstr->str[i - chars]) < INT32_MIN) || ft_atol(obj->tstr->str)\
 	== 0)

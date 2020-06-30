@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/28 17:32:23 by bprado        ########   odam.nl         */
+/*   Updated: 2020/06/30 16:17:57 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct		s_link
 **	parent_queue=> pointer to t_queue node in which the parent room is room
 **	room		=> pointer to the current room
 **	child_room	=> populated once path is found, points to next room in path
+**	parent_tlink=> t_link used by parent room to add child room to queue
 **	level		=> number of steps from which room distanced to start room
 **	path_len	=> len of path, only assigned on node for room at start of path
 **	min_ants	=> min number of ants which must be in strtrm to use path
@@ -97,6 +98,7 @@ typedef struct		s_queue
 	struct s_queue	*parent_queue;
 	t_room			*room;
 	t_room			*child_room;
+	t_link			*parent_tlink_to_child;
 	int				level;
 	int				path_len;
 	int				min_ants;
