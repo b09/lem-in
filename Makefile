@@ -6,14 +6,15 @@
 #    By: bprado <bprado@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2019/06/03 16:52:44 by bprado        #+#    #+#                  #
-#    Updated: 2020/06/30 20:12:15 by bprado        ########   odam.nl          #
+#    Updated: 2020/07/05 18:00:14 by bprado        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= lem-in
 
-CFLAGS		= -Wall -Wextra -Werror -g
-# CFLAGS		= -g
+# CFLAGS		= -Wall -Wextra -Werror -g
+# CFLAGS		= -fsanitize=address -g
+CFLAGS		= -g
 
 SRC 		=	src/lem_in.c \
 				src/print_functions.c \
@@ -90,6 +91,7 @@ fclean:
 	@printf "Deleting$(YELLOW)$(BOLD)   ./$(NAME)$(END) binaries$(END_TPUT)\n"
 	@rm -rf obj
 	@rm -rf $(wildcard *.dSYM)
+	@rm -rf $(NAME)
 	@make fclean -C $(PFLIB)
 	@printf "$(GREEN)$(BOLD)Complete!$(END)$(END_TPUT)\n"
 

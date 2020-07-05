@@ -1,0 +1,13 @@
+create_tstr_list
+	head = obj.head_tstr
+		each node has str
+			obj->tstr->str
+
+create_t_room_list
+	create_troom_node
+	head = obj->head_rm
+		node->name 
+
+create_tlink_lst
+	create_tlink_node
+	head = room->head_lnk

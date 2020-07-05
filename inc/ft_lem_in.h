@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/01/27 18:13:22 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/30 16:17:57 by bprado        ########   odam.nl         */
+/*   Updated: 2020/07/02 13:50:25 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "ft_printf.h"
 # include "errors.h"
 # include <stdbool.h>
+
 
 # define C_RED		"\x1b[31m"
 # define C_GREEN	"\x1b[32m"
@@ -221,7 +222,8 @@ int					create_troom_lst(t_obj *obj);
 void				create_tqueue_node(t_obj *obj);
 void				breadth_first_search(t_obj *obj, int paths);
 void				assign_path(t_obj *obj, t_queue *room);
-void				delete_tqueue_nodes(t_obj *obj, t_queue *queue);
+void				delete_tqueue_nodes(t_obj *obj, t_queue *queue,\
+			char del_all);
 void				connect_tqueue_nodes(t_obj *obj);
 int					count_links(t_link *room);
 void				print_queue_from_qend(t_obj *obj);

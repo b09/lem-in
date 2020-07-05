@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/12 16:47:57 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/30 19:29:13 by bprado        ########   odam.nl         */
+/*   Updated: 2020/07/02 14:08:50 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void			print_troom_lst(t_obj *obj)
 	}
 	ft_printf("\n");
 }
-
 void			print_tlink_lst(t_obj *obj)
 {
 	ft_printf("%s()\n", __func__);
@@ -65,6 +64,7 @@ void			print_tlink_lst(t_obj *obj)
 	}
 }
 
+*/
 void			print_tqueue_lst(t_obj *obj)
 {
 	int			i;
@@ -89,6 +89,7 @@ void			print_tqueue_lst(t_obj *obj)
 	obj->room->queue->child_room, obj->room->queue, obj->room->level);
 }
 
+/*
 void			print_tqueue_path(t_obj *obj, t_room *temp)
 {
 	if (temp != obj->start_room)

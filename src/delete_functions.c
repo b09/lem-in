@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/16 17:41:22 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/30 19:28:21 by bprado        ########   odam.nl         */
+/*   Updated: 2020/07/05 18:37:57 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,19 @@ void			delete_string_lst(t_str **list)
 
 void			delete_troom_lst(t_room **list)
 {
-	if ((*list)->links)
-		delete_tlink_lst(&(*list)->links);
+	if ((*list)->head_lnk)
+		delete_tlink_lst(&(*list)->head_lnk);
 	if ((*list)->path)
+	{
+		
+		printf(C_RED"deleting PATH node with name %s\n"C_RESET, (*list)->name);
 		ft_memdel((void*)&(*list)->path);
+	}
 	if (*list != NULL)
 	{
 		if ((*list)->next)
 			delete_troom_lst(&(*list)->next);
+		ft_memdel((void*)&(*list)->name);
 		ft_memdel((void*)&(*list));
 		*list = NULL;
 	}
@@ -52,17 +57,17 @@ void			delete_tlink_lst(t_link **list)
 
 void			delete_all(t_obj *obj)
 {
-	if (obj->tstr)
-		delete_string_lst(&obj->tstr);
+	if (obj->head_tstr)
+		delete_string_lst(&obj->head_tstr);
 	if (obj->head_rm)
 		delete_troom_lst(&obj->head_rm);
-	exit(1);
+	if (obj->head_q)
+		delete_tqueue_nodes(obj, obj->head_q, 1);
 }
 
 /*
 **	parentroom && childroom are vertices
 **	parentroom->links->childroom is an edge
-
 **	queue->parent_tlink_to_child->queue = 0 is an interesting line ...
 **	parent_tlink_to_child is the only access that each t_queue node
 **	has to the parent->links->queue member, which is itself used to 
@@ -84,11 +89,30 @@ void			delete_all(t_obj *obj)
 **	that edge will never be added to the queue again, even if that edge could 
 **	lead to a valid path on later bfs() calls.
 */
-void			delete_tqueue_nodes(t_obj *obj, t_queue *queue)
+void			delete_tqueue_nodes(t_obj *obj, t_queue *queue, char del_all)
 {
-	if (queue != obj->tail_q)
-		delete_tqueue_nodes(obj, queue->next);
-	queue->parent_tlink_to_child->queue = 0;
-	if (queue->assign_to_path == 0)
+	if (queue && queue != obj->tail_q)
+	{
+		delete_tqueue_nodes(obj, queue->next, del_all);
+	}
+	// printf("currentq:%s parent:%s endq:%s endrm: %s\n",  queue->room->name, queue->prnt_rm->name, obj->tail_q->room->name, obj->end_room->name);
+	if (del_all == 0)
+	{
+		queue->parent_tlink_to_child->queue = 0;
+		if (queue->assign_to_path == 0)
+		{
+			printf(C_RED"deleting queue:"C_YELLOW" %s\n"C_RESET, queue->room->name);
+			ft_memdel((void*)&(queue));
+			queue = NULL;
+		}
+	}
+	else
+	{
+		// printf("reached here with queue:%s\n", queue->room->name);
+		printf(C_RED"deleting queue:"C_YELLOW" %s\n"C_RESET, queue->room->name);
 		ft_memdel((void*)&(queue));
+		if (queue == obj->head_q)
+			// printf("inside delete_all head: %p, temp: %p, curr: %p, tail: %p\n", obj->head_q, obj->temp_q, obj->curr_q, obj->tail_q);
+		queue = NULL;
+	}
 }

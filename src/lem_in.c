@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/06/30 19:34:37 by bprado        ########   odam.nl         */
+/*   Updated: 2020/07/03 19:31:01 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ int				main(void)
 		// print_multiple_paths(&obj, 0, 0);
 	}
 	delete_all(&obj);
+	// print_tqueue_lst(&obj);
+	// printf("obj addresses\n");
+	// printf("size of tquee: %d", sizeof(t_queue));
+	// printf("head: %p, temp: %p, curr: %p, tail: %p\n", &obj.head_q, &obj.temp_q, &obj.curr_q, &obj.tail_q);
 	return (0);
 }
 
@@ -71,7 +75,6 @@ void			assign_total_steps_to_paths(t_obj *obj)
 /*
 **	no paths are protected in breadth_first_search(), even though in the func()
 **	it appears they would fall into the else \n return;
-// THE ISSUE IS IN tail_q NOT HAVING ANY VALUE
 */
 
 void			connect_everything(t_obj *obj, double steps, double steps2,\
@@ -92,7 +95,7 @@ void			connect_everything(t_obj *obj, double steps, double steps2,\
 			if (steps < steps2 || steps2 == -1)
 			{
 				assign_path(obj, obj->tail_q);
-				delete_tqueue_nodes(obj, obj->head_q);
+				delete_tqueue_nodes(obj, obj->head_q, 0);
 				connect_tqueue_nodes(obj);
 			}
 			else
