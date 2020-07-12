@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/07/12 18:29:33 by macbook       ########   odam.nl         */
+/*   Updated: 2020/07/12 19:35:54 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int				main(void)
 		// print_multiple_paths(&obj, 0, 0);
 	}
 	delete_all(&obj);
+	while (1)
+		;
 	// print_tqueue_lst(&obj);
 	// printf("obj addresses\n");
 	// printf("size of tquee: %d", sizeof(t_queue));
