@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/07/03 19:31:01 by bprado        ########   odam.nl         */
+/*   Updated: 2020/07/12 18:29:33 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int				main(void)
 **	connect to the start_room and checking if the path is suitable for an ant
 **	based on the number of ants remaining in the start, and the length of each
 **	path
+	printf("%s line %d child_room:%p\n", __func__, __LINE__, room->path->child_room);
 */
 
 void			assign_total_steps_to_paths(t_obj *obj)

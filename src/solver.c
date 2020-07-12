@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/20 12:12:33 by macbook       #+#    #+#                 */
-/*   Updated: 2020/07/05 18:26:49 by bprado        ########   odam.nl         */
+/*   Updated: 2020/07/12 18:30:11 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,11 +133,21 @@ void			breadth_first_search(t_obj *obj, int paths)
 		print_error(NO_PATH);
 }
 
+/*
+**	queue nodes will assigned as path_nd in each room, if room does not already
+**	have a path_nd. If it already has a path_nd, both path_nd and new queue will
+**	be merged, resulting in new path/route. 
+**	the end_rm will only once have its queue become a path_nd once, as the rest
+**	of the func() requires the current queue node to have a child_room, which
+**	end_rm will not have.
+*/
 void			connect_tqueue_nodes(t_obj *obj)
 {
 	t_queue		*queue;
 
-	queue = obj->tail_q;
+	queue = obj->tail_q->parent_queue;
+	queue->child_room = obj->end_room;
+	// queue = obj->tail_q;
 	while (queue)
 	{
 		if (queue->parent_queue)

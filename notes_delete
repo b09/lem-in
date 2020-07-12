@@ -11,3 +11,43 @@ create_t_room_list
 create_tlink_lst
 	create_tlink_node
 	head = room->head_lnk
+
+
+
+connect_everything()
+	bfs
+		check_room -> create_tqueue
+	assign_to_path() // starts at tail_q, goes to parent
+					// until parent_room is start_room
+	delete_tqueue() // starts at head_q, until not queue
+					// or until queue is not tail_q
+	// the recursion for delete_tqueue nodes stops
+	// but if queue is tail_q, the rest of the code will 
+	// execute	
+
+	tail_q is always assign_to_path = 1
+	delete_tqueue runs until queue is tail_q, but does not delete tail_q
+	for del_all == 0, BUT yes for del_all == 1. Issue may be that
+
+	assuming end_rm has path
+	connect_tqueue_nodes 
+		end_rm is only assigned path once and no other code is executed
+		as end_rm does not have a child_room.
+
+	the first queue node in end_rm is assigned to path; queue and path are
+	the same node, they cannot both be freed.
+	
+	delete_tqueue will now delete tail_q if end_rm does not contain path. 
+	this will depend entirely on connect_tqueue_nodes(), where if the while loop
+	starts at the parent of tail_q instead of tail_q directly, end_rm will not
+	be assigned a path. 
+
+	what if tail_q is not end_rm->queue?
+	it will always be end_rm->queue, and it is checked in create_tqueue_node()
+
+	end_rm will not have path
+	
+
+
+
+	

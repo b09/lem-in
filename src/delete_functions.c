@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/16 17:41:22 by macbook       #+#    #+#                 */
-/*   Updated: 2020/07/05 18:37:57 by bprado        ########   odam.nl         */
+/*   Updated: 2020/07/12 19:08:32 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void			delete_tqueue_nodes(t_obj *obj, t_queue *queue, char del_all)
 		delete_tqueue_nodes(obj, queue->next, del_all);
 	}
 	// printf("currentq:%s parent:%s endq:%s endrm: %s\n",  queue->room->name, queue->prnt_rm->name, obj->tail_q->room->name, obj->end_room->name);
-	if (del_all == 0)
+	if (del_all == 0 && queue)
 	{
 		queue->parent_tlink_to_child->queue = 0;
 		if (queue->assign_to_path == 0)
@@ -108,8 +108,9 @@ void			delete_tqueue_nodes(t_obj *obj, t_queue *queue, char del_all)
 	}
 	else
 	{
+	printf("%s line: %d queue:%p tail_q:%p\n", __func__, __LINE__, queue, obj->tail_q);
 		// printf("reached here with queue:%s\n", queue->room->name);
-		printf(C_RED"deleting queue:"C_YELLOW" %s\n"C_RESET, queue->room->name);
+		// printf(C_RED"deleting queue:"C_YELLOW" %s\n"C_RESET, queue->room->name);
 		ft_memdel((void*)&(queue));
 		if (queue == obj->head_q)
 			// printf("inside delete_all head: %p, temp: %p, curr: %p, tail: %p\n", obj->head_q, obj->temp_q, obj->curr_q, obj->tail_q);
