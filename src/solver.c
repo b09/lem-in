@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/20 12:12:33 by macbook       #+#    #+#                 */
-/*   Updated: 2020/07/12 18:30:11 by macbook       ########   odam.nl         */
+/*   Updated: 2020/07/20 13:36:25 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,7 @@ void			create_tqueue_node(t_obj *obj)
 	obj->temp_q->room->queue = obj->temp_q;
 	obj->temp_q->level = assign_level(obj);
 	if (!obj->head_q)
-	{
-		printf(C_GREEN"vvvv   head below   vvvv\n"C_RESET);
 		obj->head_q = obj->temp_q;
-	}
 	else
 	{
 		if (obj->tail_q && obj->temp_q->level < obj->tail_q->level &&\
@@ -40,17 +37,12 @@ void			create_tqueue_node(t_obj *obj)
 			obj->curr_q->next = obj->temp_q;
 			obj->temp_q->parent_queue = obj->curr_q;
 			obj->tail_q = obj->temp_q->next ? obj->tail_q : obj->temp_q;
-			printf("address: %p queue: %s   parent:%s\n", obj->temp_q, obj->temp_q->room->name, obj->temp_q->parent_queue->room->name);		//delete
 			return ;
 		}
 		else
 			obj->tail_q->next = obj->temp_q;
 	}
 	obj->tail_q = obj->temp_q;
-	if (obj->temp_q->parent_queue)
-		printf("address: %p queue: %s   parent:%s\n", obj->temp_q, obj->temp_q->room->name, obj->temp_q->parent_queue->room->name);		//delete
-	else
-		printf("address: %p queue: %s\n", obj->temp_q, obj->temp_q->room->name);		//delete
 }
 
 /*
@@ -136,18 +128,18 @@ void			breadth_first_search(t_obj *obj, int paths)
 /*
 **	queue nodes will assigned as path_nd in each room, if room does not already
 **	have a path_nd. If it already has a path_nd, both path_nd and new queue will
-**	be merged, resulting in new path/route. 
+**	be merged, resulting in new path/route.
 **	the end_rm will only once have its queue become a path_nd once, as the rest
 **	of the func() requires the current queue node to have a child_room, which
 **	end_rm will not have.
 */
+
 void			connect_tqueue_nodes(t_obj *obj)
 {
 	t_queue		*queue;
 
 	queue = obj->tail_q->parent_queue;
 	queue->child_room = obj->end_room;
-	// queue = obj->tail_q;
 	while (queue)
 	{
 		if (queue->parent_queue)
@@ -164,10 +156,7 @@ void			connect_tqueue_nodes(t_obj *obj)
 		queue = queue->parent_queue;
 	}
 	if (obj->tail_q)
-	{
-		printf(C_RED"connect() deleting queue:"C_YELLOW" %s\n"C_RESET, obj->tail_q->room->name);
-		ft_memdel((void*)&obj->tail_q);		// testing this
-	}
+		ft_memdel((void*)&obj->tail_q);
 	obj->head_q = NULL;
 	obj->tail_q = NULL;
 }

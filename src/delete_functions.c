@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/16 17:41:22 by macbook       #+#    #+#                 */
-/*   Updated: 2020/07/12 19:08:32 by macbook       ########   odam.nl         */
+/*   Updated: 2020/07/20 13:37:57 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,7 @@ void			delete_troom_lst(t_room **list)
 	if ((*list)->head_lnk)
 		delete_tlink_lst(&(*list)->head_lnk);
 	if ((*list)->path)
-	{
-		
-		printf(C_RED"deleting PATH node with name %s\n"C_RESET, (*list)->name);
 		ft_memdel((void*)&(*list)->path);
-	}
 	if (*list != NULL)
 	{
 		if ((*list)->next)
@@ -70,7 +66,7 @@ void			delete_all(t_obj *obj)
 **	parentroom->links->childroom is an edge
 **	queue->parent_tlink_to_child->queue = 0 is an interesting line ...
 **	parent_tlink_to_child is the only access that each t_queue node
-**	has to the parent->links->queue member, which is itself used to 
+**	has to the parent->links->queue member, which is itself used to
 **	evaluate in check_room_add_to_queue() whether the current
 **	parentroom->links->childroom edge is valid, and can be added to the queue.
 **	each links node in parentroom describes the edges that parentroom has
@@ -78,42 +74,35 @@ void			delete_all(t_obj *obj)
 **	parentroom's link node will have the childroom's t_queue pointer added
 **	to it as it's queue member. In other words, when parentroom wants to add
 **	childroom to the queue, if childroom is already on the queue, parentroom
-**	will have a pointer to that exact t_queue node in the linked list of 
-**	queue nodes where the edge parentroom->links->childroom is contained. 
+**	will have a pointer to that exact t_queue node in the linked list of
+**	queue nodes where the edge parentroom->links->childroom is contained.
 **	as delete_tqueue_nodes() deletes from childroom to parentroom, the func()
 **	needs access to parentroom's link to childroom, and it needs to access
 **	it from childroom, so that, if the bfs() runs again, it will add the edge
 **	of parentroom->links->childroom to the queue if that edge was not used on
 **	a previous bfs() call which resulted with that edge being on a path.
 **	otherwise, if parentroom->links->childroom was ever added to the queue,
-**	that edge will never be added to the queue again, even if that edge could 
+**	that edge will never be added to the queue again, even if that edge could
 **	lead to a valid path on later bfs() calls.
 */
+
 void			delete_tqueue_nodes(t_obj *obj, t_queue *queue, char del_all)
 {
 	if (queue && queue != obj->tail_q)
-	{
 		delete_tqueue_nodes(obj, queue->next, del_all);
-	}
-	// printf("currentq:%s parent:%s endq:%s endrm: %s\n",  queue->room->name, queue->prnt_rm->name, obj->tail_q->room->name, obj->end_room->name);
 	if (del_all == 0 && queue)
 	{
 		queue->parent_tlink_to_child->queue = 0;
 		if (queue->assign_to_path == 0)
 		{
-			printf(C_RED"deleting queue:"C_YELLOW" %s\n"C_RESET, queue->room->name);
 			ft_memdel((void*)&(queue));
 			queue = NULL;
 		}
 	}
 	else
 	{
-	printf("%s line: %d queue:%p tail_q:%p\n", __func__, __LINE__, queue, obj->tail_q);
-		// printf("reached here with queue:%s\n", queue->room->name);
-		// printf(C_RED"deleting queue:"C_YELLOW" %s\n"C_RESET, queue->room->name);
 		ft_memdel((void*)&(queue));
 		if (queue == obj->head_q)
-			// printf("inside delete_all head: %p, temp: %p, curr: %p, tail: %p\n", obj->head_q, obj->temp_q, obj->curr_q, obj->tail_q);
-		queue = NULL;
+			queue = NULL;
 	}
 }

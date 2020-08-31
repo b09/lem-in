@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/26 13:10:28 by bprado        #+#    #+#                 */
-/*   Updated: 2020/06/30 19:28:39 by bprado        ########   odam.nl         */
+/*   Updated: 2020/07/20 13:37:12 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,10 @@ int				check_endrm(t_obj *obj)
 	return (0);
 }
 
-/* 
-**	called in check_room_add_to_queue() to check whether the child room 
-
+/*
+**	called in check_room_add_to_queue() to check whether the child room
 */
+
 int				check_parent_queue(t_obj *obj)
 {
 	t_link		*links;

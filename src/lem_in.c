@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/07/12 19:35:54 by macbook       ########   odam.nl         */
+/*   Updated: 2020/07/20 13:28:47 by bprado        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,8 @@ int				main(void)
 		assign_total_steps_to_paths(&obj);
 		assign_min_ants_for_use_of_paths(&obj, 1, 1, 0);
 		move_and_print_ants(&obj, 1, 0, obj.ants);
-		// print_multiple_paths(&obj, 0, 0);
 	}
 	delete_all(&obj);
-	while (1)
-		;
-	// print_tqueue_lst(&obj);
-	// printf("obj addresses\n");
-	// printf("size of tquee: %d", sizeof(t_queue));
-	// printf("head: %p, temp: %p, curr: %p, tail: %p\n", &obj.head_q, &obj.temp_q, &obj.curr_q, &obj.tail_q);
 	return (0);
 }
 
@@ -47,7 +40,6 @@ int				main(void)
 **	connect to the start_room and checking if the path is suitable for an ant
 **	based on the number of ants remaining in the start, and the length of each
 **	path
-	printf("%s line %d child_room:%p\n", __func__, __LINE__, room->path->child_room);
 */
 
 void			assign_total_steps_to_paths(t_obj *obj)
