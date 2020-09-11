@@ -6,7 +6,7 @@
 /*   By: macbook <macbook@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/04/08 12:50:09 by macbook       #+#    #+#                 */
-/*   Updated: 2020/07/20 13:28:47 by bprado        ########   odam.nl         */
+/*   Updated: 2020/09/11 20:25:36 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,15 @@ void			connect_everything(t_obj *obj, double steps, double steps2,\
 /*
 **	ensure the length of each path is in the path->path_len member
 **	create a while loop that starts at 1, and checks path_len for
-**	each path. one the shortest path/s are found, start a counter from that
+**	each path. once the shortest *path/s are found, start a counter from that
 **	point which is when the first ants would reach the end. assign that
 **	counter (which is one) to the path as the minimum number of ants requi-
 **	red to use that path, and if multiple paths contain the same length,
 **	assign the same number to them, but also increase that second counter
 **	based on the number of current paths that can handle ants
+**
+**		notes: *path/s == multiple paths could have the same length
+**						so there could be multiple shortest paths
 */
 
 int				get_number_of_paths(t_obj *obj)
