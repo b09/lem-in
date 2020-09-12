@@ -12,43 +12,43 @@
 
 #include "ft_lem_in.h"
 
-int				check_duplicate_coordinates(t_obj *obj)
+int				check_duplicate_coordinates(t_lemin *lemin)
 {
 	t_room		*temp;
 
-	temp = obj->head_rm;
+	temp = lemin->head_rm;
 	while (temp)
 	{
-		obj->room = temp->next;
-		while (obj->room && temp)
+		lemin->room = temp->next;
+		while (lemin->room && temp)
 		{
-			if (obj->room->coord_x == temp->coord_x)
+			if (lemin->room->coord_x == temp->coord_x)
 			{
-				if (obj->room->coord_y == temp->coord_y)
+				if (lemin->room->coord_y == temp->coord_y)
 					return (print_error(DUP_COOR));
 			}
-			obj->room = obj->room->next;
+			lemin->room = lemin->room->next;
 		}
 		temp = temp->next;
 	}
 	return (1);
 }
 
-int				check_duplicate_rooms_and_coordinates(t_obj *obj)
+int				check_duplicate_rooms_and_coordinates(t_lemin *lemin)
 {
 	t_room		*temp;
 
-	temp = obj->head_rm;
+	temp = lemin->head_rm;
 	while (temp)
 	{
-		obj->room = temp->next;
-		while (obj->room && temp)
+		lemin->room = temp->next;
+		while (lemin->room && temp)
 		{
-			if (ft_strcmp(obj->room->name, temp->name) == 0)
+			if (ft_strcmp(lemin->room->name, temp->name) == 0)
 				return (print_error(DUP_NAME));
-			obj->room = obj->room->next;
+			lemin->room = lemin->room->next;
 		}
 		temp = temp->next;
 	}
-	return (check_duplicate_coordinates(obj));
+	return (check_duplicate_coordinates(lemin));
 }

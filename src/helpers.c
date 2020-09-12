@@ -18,11 +18,11 @@
 **	room's address
 */
 
-t_room			*get_troom_by_name(char *str, t_obj *obj)
+t_room			*get_troom_by_name(char *str, t_lemin *lemin)
 {
 	t_room		*temp;
 
-	temp = obj->head_rm;
+	temp = lemin->head_rm;
 	while (temp)
 	{
 		if (!ft_memcmp(temp->name, str, ft_strlen(temp->name)))
@@ -32,15 +32,15 @@ t_room			*get_troom_by_name(char *str, t_obj *obj)
 	return (NULL);
 }
 
-int				assign_level(t_obj *obj)
+int				assign_level(t_lemin *lemin)
 {
-	if (obj->curr_q)
+	if (lemin->curr_q)
 	{
-		if (obj->room->path && obj->room->path->prnt_rm ==\
-		obj->room->links->room)
-			return (obj->curr_q->level - 1);
+		if (lemin->room->path
+			&& lemin->room->path->prnt_rm == lemin->room->links->room)
+			return (lemin->curr_q->level - 1);
 		else
-			return (obj->curr_q->level + 1);
+			return (lemin->curr_q->level + 1);
 	}
 	return (1);
 }
@@ -53,11 +53,12 @@ int				assign_level(t_obj *obj)
 **	previous bfs() call which resulted in a valid path.
 */
 
-int				check_endrm(t_obj *obj)
+int				check_endrm(t_lemin *lemin)
 {
-	if (obj->room->links->room == obj->end_room)
+	if (lemin->room->links->room == lemin->end_room)
 	{
-		if (obj->room->path && obj->room->path->child_room == obj->end_room)
+		if (lemin->room->path
+			&& lemin->room->path->child_room == lemin->end_room)
 			return (0);
 		return (1);
 	}
@@ -68,14 +69,14 @@ int				check_endrm(t_obj *obj)
 **	called in check_room_add_to_queue() to check whether the child room
 */
 
-int				check_parent_queue(t_obj *obj)
+int				check_parent_queue(t_lemin *lemin)
 {
 	t_link		*links;
 
-	links = obj->room->links->room->head_lnk;
+	links = lemin->room->links->room->head_lnk;
 	while (links)
 	{
-		if (links->room == obj->room && links->queue)
+		if (links->room == lemin->room && links->queue)
 		{
 			return (1);
 		}
@@ -84,9 +85,9 @@ int				check_parent_queue(t_obj *obj)
 	return (0);
 }
 
-void			assign_path(t_obj *obj, t_queue *queue)
+void			assign_path(t_lemin *lemin, t_queue *queue)
 {
 	queue->assign_to_path = 1;
-	if (queue && queue->prnt_rm != obj->start_room)
-		assign_path(obj, queue->parent_queue);
+	if (queue && queue->prnt_rm != lemin->start_room)
+		assign_path(lemin, queue->parent_queue);
 }

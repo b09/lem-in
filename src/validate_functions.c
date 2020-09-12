@@ -28,8 +28,9 @@ int				validate_link(char *str)
 	{
 		if (str[0] == '#')
 			break ;
-		if ((str[i] == ' ') || (!ft_isprint(str[i]) && str[i] != '\n') || \
-			(i == 0 && (str[i] == '\n' || str[i] == '-')))
+		if ((str[i] == ' ')
+			|| (!ft_isprint(str[i]) && str[i] != '\n')
+			|| (i == 0 && (str[i] == '\n' || str[i] == '-')))
 			return (0);
 		if (str[i] == '-')
 			++dash;
@@ -46,16 +47,16 @@ int				validate_link(char *str)
 **	##end or comment beginning with #
 */
 
-int				validate_comment(char *str, t_obj *obj)
+int				validate_comment(char *str, t_lemin *lemin)
 {
 	if (ft_strcmp(str, "##start\n") == 0)
 	{
-		obj->flags |= START_CMMT;
+		lemin->flags |= START_CMMT;
 		return (2);
 	}
 	else if (ft_strcmp(str, "##end\n") == 0)
 	{
-		obj->flags |= END_CMMT;
+		lemin->flags |= END_CMMT;
 		return (3);
 	}
 	else
@@ -73,7 +74,7 @@ int				validate_comment(char *str, t_obj *obj)
 **		5 = str describes a link
 */
 
-int				validate_string_list(char *str, t_obj *obj)
+int				validate_string_list(char *str, t_lemin *lemin)
 {
 	int			i;
 	int			spaces;
@@ -87,7 +88,7 @@ int				validate_string_list(char *str, t_obj *obj)
 		if (str[0] == 'L' && str[1] && str[1] == ' ')
 			return (print_error(BAD_L));
 		if (str[i] == '#' && i == 0)
-			return (validate_comment(str, obj));
+			return (validate_comment(str, lemin));
 		spaces += str[i] == ' ' ? 1 : 0;
 		i += str[i] == ' ' ? 1 : 0;
 		if (spaces > 0 && !ft_isdigit(str[i]) && str[i] != '\n')
@@ -103,34 +104,36 @@ int				validate_string_list(char *str, t_obj *obj)
 
 /*
 **	replace below line in fuction if running on linux
-**	if (chars > 10 || (ft_atol(&obj->tstr->str[i - chars]) > INT_MAX ||\
-**	ft_atol(&obj->tstr->str[i - chars]) < INT_MIN) || ft_atol(obj->tstr->str)\
-**	== 0)				// for valgrind on docker
+**	if (chars > 10 || (ft_atol(&lemin->tstr->str[i - chars]) > INT_MAX
+** 			|| ft_atol(&lemin->tstr->str[i - chars]) < INT_MIN)
+**		|| ft_atol(lemin->tstr->str) == 0)
+**	// for valgrind on docker
 */
 
-int				validate_first_line(t_obj *obj)
+int				validate_first_line(t_lemin *lemin)
 {
 	int			i;
 	int			chars;
 
 	chars = 0;
 	i = 0;
-	obj->tstr = obj->head_tstr;
-	while (obj->tstr->str[i] == '#')
-		obj->tstr = obj->tstr->next;
-	while (obj->tstr->str[i])
+	lemin->tstr = lemin->head_tstr;
+	while (lemin->tstr->str[i] == '#')
+		lemin->tstr = lemin->tstr->next;
+	while (lemin->tstr->str[i])
 	{
-		if (!ft_isdigit(obj->tstr->str[i]) && obj->tstr->str[i] != '\n')
+		if (!ft_isdigit(lemin->tstr->str[i]) && lemin->tstr->str[i] != '\n')
 			return (print_error(NOT_DIGIT));
 		++chars;
 		++i;
 	}
-	if (chars > 10 || (ft_atol(&obj->tstr->str[i - chars]) > INT32_MAX ||\
-	ft_atol(&obj->tstr->str[i - chars]) < INT32_MIN) || ft_atol(obj->tstr->str)\
-	== 0)
+	if (chars > 10
+		|| (ft_atol(&lemin->tstr->str[i - chars]) > INT32_MAX
+			|| ft_atol(&lemin->tstr->str[i - chars]) < INT32_MIN)
+		|| ft_atol(lemin->tstr->str) == 0)
 		return (print_error(ZERO_ANTS));
-	obj->ants = ft_atoi(obj->tstr->str);
-	obj->tstr = obj->tstr->next;
+	lemin->ants = ft_atoi(lemin->tstr->str);
+	lemin->tstr = lemin->tstr->next;
 	return (1);
 }
 
@@ -142,29 +145,29 @@ int				validate_first_line(t_obj *obj)
 **	ex: dead_end->room2->room1->start->roomA->roomB->end->roomY->roomZ->dead_end
 */
 
-int				remove_dead_end_paths(t_obj *obj, t_room *all_rooms, \
-				t_room *cur_room, t_room *parent)
+int				remove_dead_end_paths
+	(t_lemin *lemin, t_room *all_rooms, t_room *cur_room, t_room *parent)
 {
 	t_room		*temp;
 
 	temp = NULL;
-	while (all_rooms != obj->head_rm)
+	while (all_rooms != lemin->head_rm)
 	{
-		if (all_rooms->head_lnk && !all_rooms->head_lnk->next && all_rooms\
-		!= obj->end_room && all_rooms != obj->start_room)
+		if (all_rooms->head_lnk && !all_rooms->head_lnk->next
+			&& all_rooms != lemin->end_room && all_rooms != lemin->start_room)
 		{
 			cur_room = all_rooms->head_lnk->room;
 			parent = all_rooms;
-			while (cur_room != obj->start_room && cur_room != obj->end_room &&\
-			count_links(cur_room->head_lnk) == 2)
+			while (cur_room != lemin->start_room && cur_room != lemin->end_room
+					&& count_links(cur_room->head_lnk) == 2)
 			{
 				temp = cur_room;
 				cur_room = cur_room->head_lnk->room == parent ?\
 				cur_room->head_lnk->next->room : cur_room->head_lnk->room;
 				parent = temp;
 			}
-			if (cur_room == obj->start_room || cur_room == obj->end_room ||\
-			count_links(cur_room->head_lnk) > 2)
+			if (cur_room == lemin->start_room || cur_room == lemin->end_room
+				|| count_links(cur_room->head_lnk) > 2)
 				parent->dead_end = 1;
 		}
 		all_rooms = all_rooms->next;

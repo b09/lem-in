@@ -16,33 +16,33 @@
 **  creates a node for linked list which is a queue
 */
 
-void			create_tqueue_node(t_obj *obj)
+void			create_tqueue_node(t_lemin *lemin)
 {
-	obj->temp_q = ft_memalloc(sizeof(t_queue));
-	obj->temp_q->prnt_rm = obj->room;
-	obj->temp_q->parent_queue = obj->curr_q;
-	obj->temp_q->parent_tlink_to_child = obj->room->links;
-	obj->room->links->queue = obj->temp_q;
-	obj->temp_q->room = obj->room->links->room;
-	obj->temp_q->room->queue = obj->temp_q;
-	obj->temp_q->level = assign_level(obj);
-	if (!obj->head_q)
-		obj->head_q = obj->temp_q;
+	lemin->temp_q = ft_memalloc(sizeof(t_queue));
+	lemin->temp_q->prnt_rm = lemin->room;
+	lemin->temp_q->parent_queue = lemin->curr_q;
+	lemin->temp_q->parent_tlink_to_child = lemin->room->links;
+	lemin->room->links->queue = lemin->temp_q;
+	lemin->temp_q->room = lemin->room->links->room;
+	lemin->temp_q->room->queue = lemin->temp_q;
+	lemin->temp_q->level = assign_level(lemin);
+	if (!lemin->head_q)
+		lemin->head_q = lemin->temp_q;
 	else
 	{
-		if (obj->tail_q && obj->temp_q->level < obj->tail_q->level &&\
-		obj->room->links->room != obj->end_room)
+		if (lemin->tail_q && lemin->temp_q->level < lemin->tail_q->level
+			&& lemin->room->links->room != lemin->end_room)
 		{
-			obj->temp_q->next = obj->curr_q->next;
-			obj->curr_q->next = obj->temp_q;
-			obj->temp_q->parent_queue = obj->curr_q;
-			obj->tail_q = obj->temp_q->next ? obj->tail_q : obj->temp_q;
+			lemin->temp_q->next = lemin->curr_q->next;
+			lemin->curr_q->next = lemin->temp_q;
+			lemin->temp_q->parent_queue = lemin->curr_q;
+			lemin->tail_q = lemin->temp_q->next ? lemin->tail_q : lemin->temp_q;
 			return ;
 		}
 		else
-			obj->tail_q->next = obj->temp_q;
+			lemin->tail_q->next = lemin->temp_q;
 	}
-	obj->tail_q = obj->temp_q;
+	lemin->tail_q = lemin->temp_q;
 }
 
 /*
@@ -56,7 +56,7 @@ void			create_tqueue_node(t_obj *obj)
 **	first if:
 **		if child in path is the same as potential queue child, return.
 **	second if:
-**		obj->start_room will not have a path, so if statement must be described
+**		lemin->start_room will not have a path, so if statement must be described
 **		from perspective of child as well (see first if)
 **	third if:
 **		do not create a node for the parent of the current room, as it will have
@@ -67,31 +67,31 @@ void			create_tqueue_node(t_obj *obj)
 **		room which goes against the path.
 */
 
-void			check_room_add_to_queue(t_obj *obj)
+void			check_room_add_to_queue(t_lemin *lemin)
 {
-	if (obj->room->links->room != obj->start_room &&\
-	obj->room->links->room->dead_end == 0)
+	if (lemin->room->links->room != lemin->start_room
+		&& lemin->room->links->room->dead_end == 0)
 	{
-		if (obj->room->links->queue != 0)
+		if (lemin->room->links->queue != 0)
 		{
-			if (obj->room->links->queue->level <= assign_level(obj))
+			if (lemin->room->links->queue->level <= assign_level(lemin))
 				return ;
 		}
-		if (obj->room->path && obj->room->path->child_room ==\
-		obj->room->links->room)
+		if (lemin->room->path
+			&& lemin->room->path->child_room == lemin->room->links->room)
 			return ;
-		if (obj->room->links->room->path &&\
-		obj->room->links->room->path->prnt_rm == obj->room)
+		if (lemin->room->links->room->path
+			&& lemin->room->links->room->path->prnt_rm == lemin->room)
 			return ;
-		if (check_parent_queue(obj))
+		if (check_parent_queue(lemin))
 			return ;
-		if (obj->room->path && obj->curr_q)
+		if (lemin->room->path && lemin->curr_q)
 		{
-			if (!obj->curr_q->prnt_rm->path && obj->room->links->room !=\
-			obj->room->path->prnt_rm)
+			if (!lemin->curr_q->prnt_rm->path
+				&& lemin->room->links->room != lemin->room->path->prnt_rm)
 				return ;
 		}
-		create_tqueue_node(obj);
+		create_tqueue_node(lemin);
 	}
 }
 
@@ -104,24 +104,24 @@ void			check_room_add_to_queue(t_obj *obj)
 **	will not be added to the queue if that room is on path WITH THE SAME EDGE
 */
 
-void			breadth_first_search(t_obj *obj, int paths)
+void			breadth_first_search(t_lemin *lemin, int paths)
 {
-	obj->curr_q = NULL;
-	obj->room = obj->start_room;
-	while (obj->room && obj->room != obj->end_room)
+	lemin->curr_q = NULL;
+	lemin->room = lemin->start_room;
+	while (lemin->room && lemin->room != lemin->end_room)
 	{
-		obj->room->links = obj->room->head_lnk;
-		while (obj->room->links)
+		lemin->room->links = lemin->room->head_lnk;
+		while (lemin->room->links)
 		{
-			check_room_add_to_queue(obj);
-			if (check_endrm(obj))
+			check_room_add_to_queue(lemin);
+			if (check_endrm(lemin))
 				return ;
-			obj->room->links = obj->room->links->next;
+			lemin->room->links = lemin->room->links->next;
 		}
-		obj->curr_q = obj->curr_q ? obj->curr_q->next : obj->head_q;
-		obj->room = obj->curr_q ? obj->curr_q->room : NULL;
+		lemin->curr_q = lemin->curr_q ? lemin->curr_q->next : lemin->head_q;
+		lemin->room = lemin->curr_q ? lemin->curr_q->room : NULL;
 	}
-	if (!paths && (!obj->tail_q || obj->tail_q->room != obj->end_room))
+	if (!paths && (!lemin->tail_q || lemin->tail_q->room != lemin->end_room))
 		print_error(NO_PATH);
 }
 
@@ -134,12 +134,12 @@ void			breadth_first_search(t_obj *obj, int paths)
 **	end_rm will not have.
 */
 
-void			connect_tqueue_nodes(t_obj *obj)
+void			connect_tqueue_nodes(t_lemin *lemin)
 {
 	t_queue		*queue;
 
-	queue = obj->tail_q->parent_queue;
-	queue->child_room = obj->end_room;
+	queue = lemin->tail_q->parent_queue;
+	queue->child_room = lemin->end_room;
 	while (queue)
 	{
 		if (queue->parent_queue)
@@ -155,10 +155,10 @@ void			connect_tqueue_nodes(t_obj *obj)
 		}
 		queue = queue->parent_queue;
 	}
-	if (obj->tail_q)
-		ft_memdel((void*)&obj->tail_q);
-	obj->head_q = NULL;
-	obj->tail_q = NULL;
+	if (lemin->tail_q)
+		ft_memdel((void*)&lemin->tail_q);
+	lemin->head_q = NULL;
+	lemin->tail_q = NULL;
 }
 
 int				count_links(t_link *links)

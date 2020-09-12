@@ -19,7 +19,6 @@
 # include "errors.h"
 # include <stdbool.h>
 
-
 # define C_RED		"\x1b[31m"
 # define C_GREEN	"\x1b[32m"
 # define C_YELLOW	"\x1b[33m"
@@ -48,12 +47,18 @@
 **	addr of start room as described by "##start"
 */
 
+typedef struct 		s_ant
+{
+	int				ant_id;
+}					t_ant;
+
 typedef	struct		s_room
 {
 	char			*name;
 	int				coord_x;
 	int				coord_y;
 	int				ant;
+	t_ant			*current_ant;
 	struct s_room	*next;
 	struct s_room	*prev;
 	struct s_link	*links;
@@ -118,7 +123,7 @@ typedef struct		s_str
 }					t_str;
 
 /*
-**		----- strtuct t_obj -----
+**		----- strtuct t_lemin -----
 **	ants		=> number of ants in start room
 **	room_count	=> number of rooms on map
 **	flags		=> ensures ##start and ##end are active
@@ -135,7 +140,7 @@ typedef struct		s_str
 **	curr_q		=> pointer for t_queue currently being evaluated
 **	tail_q		=> pointer to end of the t_queue linked list
 */
-typedef struct		s_obj
+typedef struct		s_lemin
 {
 	int				ants;
 	int				room_count;
@@ -152,20 +157,21 @@ typedef struct		s_obj
 	t_queue			*temp_q;
 	t_queue			*curr_q;
 	t_queue			*tail_q;
-}					t_obj;
+	size_t			ants_finished;
+}					t_lemin;
 
 /*
 **	validate_functions.c
 */
 
 int					validate_link(char *str);
-int					validate_comment(char *str, t_obj *obj);
-int					validate_string_list(char *str, t_obj *obj);
-int					validate_first_line(t_obj *obj);
-int					check_duplicate_rooms_and_coordinates(t_obj *obj);
-int					check_duplicate_coordinates(t_obj *obj);
-int					remove_dead_end_paths(t_obj *obj, t_room *all_rooms, t_room\
-			*current_room, t_room *parent);
+int					validate_comment(char *str, t_lemin *lemin);
+int					validate_string_list(char *str, t_lemin *lemin);
+int					validate_first_line(t_lemin *lemin);
+int					check_duplicate_rooms_and_coordinates(t_lemin *lemin);
+int					check_duplicate_coordinates(t_lemin *lemin);
+int					remove_dead_end_paths
+	(t_lemin *lemin, t_room *all_rooms, t_room *current_room, t_room *parent);
 int					print_error(char *str);
 
 /*
@@ -175,66 +181,74 @@ int					print_error(char *str);
 void				delete_string_lst(t_str **list);
 void				delete_troom_lst(t_room **list);
 void				delete_tlink_lst(t_link **list);
-void				delete_all(t_obj *obj);
+void				delete_all(t_lemin *lemin);
 
 /*
 **	print_functions.c
 */
 
-void				print_tstr_lst(t_obj *obj);
-void				print_troom_lst(t_obj *obj);
-void				print_tlink_lst(t_obj *obj);
-void				print_tqueue_lst(t_obj *obj);
-void				print_tqueue_path(t_obj *obj, t_room *temp);
-void				print_multiple_paths(t_obj *obj, t_room *room, t_link\
-			*links_startroom);
+void				print_tstr_lst(t_lemin *lemin);
+void				print_troom_lst(t_lemin *lemin);
+void				print_tlink_lst(t_lemin *lemin);
+void				print_tqueue_lst(t_lemin *lemin);
+void				print_tqueue_path(t_lemin *lemin, t_room *temp);
+void				print_multiple_paths
+	(t_lemin *lemin, t_room *room, t_link *links_startroom);
 
 /*
 **	lem-in.c
 */
 
-int					init_lists_and_print(t_obj *obj);
-void				print_heuristic_level(t_obj *obj);
-void				connect_everything(t_obj *obj, double steps, double steps2,\
-			int paths);
-void				assign_total_steps_to_paths(t_obj *obj);
-void				assign_min_ants_for_use_of_paths(t_obj *obj, int steps,\
-			int ants, int ant_counter);
-int					get_number_of_paths(t_obj *obj);
-void				move_and_print_ants(t_obj *obj, int current_ant,\
-			int end_rm_ants, int ants_copy);
+int					init_lists_and_print(t_lemin *lemin);
+void				print_heuristic_level(t_lemin *lemin);
+void				connect_everything
+	(t_lemin *lemin, double steps, double steps2, int paths);
+void				assign_total_steps_to_paths(t_lemin *lemin);
+void				assign_min_ants_for_use_of_paths
+	(t_lemin *lemin, int steps, int ants, int ant_counter);
+int					get_number_of_paths(t_lemin *lemin);
+void				move_and_print_ants
+	(t_lemin *lemin, int current_ant, int end_rm_ants, int ants_copy);
 
 /*
 **	create_lnkd_lists.c
 */
 
-int					create_tstr_lst(t_obj *obj);
+int					create_tstr_lst(t_lemin *lemin, int fd);
 void				create_tlink_node(t_room *link, t_room *room, char repeat);
-int					create_troom_node(t_obj *obj, int code);
-t_room				*get_troom_by_name(char *str, t_obj *obj);
-int					create_tlink_lst(t_obj *obj);
-int					create_troom_lst(t_obj *obj);
+int					create_troom_node(t_lemin *lemin, int code);
+t_room				*get_troom_by_name(char *str, t_lemin *lemin);
+int					create_tlink_lst(t_lemin *lemin);
+int					create_troom_lst(t_lemin *lemin);
 
 /*
 **	solver.c
 */
 
-void				create_tqueue_node(t_obj *obj);
-void				breadth_first_search(t_obj *obj, int paths);
-void				assign_path(t_obj *obj, t_queue *room);
-void				delete_tqueue_nodes(t_obj *obj, t_queue *queue,\
-			char del_all);
-void				connect_tqueue_nodes(t_obj *obj);
+void				create_tqueue_node(t_lemin *lemin);
+void				breadth_first_search(t_lemin *lemin, int paths);
+void				assign_path(t_lemin *lemin, t_queue *room);
+void				delete_tqueue_nodes
+	(t_lemin *lemin, t_queue *queue, char del_all);
+void				connect_tqueue_nodes(t_lemin *lemin);
 int					count_links(t_link *room);
-void				print_queue_from_qend(t_obj *obj);
-int					check_parent_queue(t_obj *obj);
-int					assign_level(t_obj *obj);
+void				print_queue_from_qend(t_lemin *lemin);
+int					check_parent_queue(t_lemin *lemin);
+int					assign_level(t_lemin *lemin);
+
 
 /*
 **	helpers.c
 */
 
-int					check_endrm(t_obj *obj);
+int					check_endrm(t_lemin *lemin);
+
+/*
+**	helpers.c
+*/
+
+void			print_move_ants
+	(t_lemin *lemin, t_room *room, t_link *links_startroom);
 
 /*
 **	malloced content:

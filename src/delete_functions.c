@@ -51,14 +51,14 @@ void			delete_tlink_lst(t_link **list)
 	}
 }
 
-void			delete_all(t_obj *obj)
+void			delete_all(t_lemin *lemin)
 {
-	if (obj->head_tstr)
-		delete_string_lst(&obj->head_tstr);
-	if (obj->head_rm)
-		delete_troom_lst(&obj->head_rm);
-	if (obj->head_q)
-		delete_tqueue_nodes(obj, obj->head_q, 1);
+	if (lemin->head_tstr)
+		delete_string_lst(&lemin->head_tstr);
+	if (lemin->head_rm)
+		delete_troom_lst(&lemin->head_rm);
+	if (lemin->head_q)
+		delete_tqueue_nodes(lemin, lemin->head_q, 1);
 }
 
 /*
@@ -86,10 +86,11 @@ void			delete_all(t_obj *obj)
 **	lead to a valid path on later bfs() calls.
 */
 
-void			delete_tqueue_nodes(t_obj *obj, t_queue *queue, char del_all)
+void			delete_tqueue_nodes
+	(t_lemin *lemin, t_queue *queue, char del_all)
 {
-	if (queue && queue != obj->tail_q)
-		delete_tqueue_nodes(obj, queue->next, del_all);
+	if (queue && queue != lemin->tail_q)
+		delete_tqueue_nodes(lemin, queue->next, del_all);
 	if (del_all == 0 && queue)
 	{
 		queue->parent_tlink_to_child->queue = 0;
@@ -102,7 +103,7 @@ void			delete_tqueue_nodes(t_obj *obj, t_queue *queue, char del_all)
 	else
 	{
 		ft_memdel((void*)&(queue));
-		if (queue == obj->head_q)
+		if (queue == lemin->head_q)
 			queue = NULL;
 	}
 }

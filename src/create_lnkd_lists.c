@@ -25,28 +25,28 @@
 **	will be printed to the screen if validation checks are passed.
 */
 
-int				create_tstr_lst(t_obj *obj)
+int				create_tstr_lst(t_lemin *lemin, int fd)
 {
 	char		*str;
 	t_str		*temp;
 
 	temp = NULL;
-	gnl_with_newline(0, &str);
+	gnl_with_newline(fd, &str);
 	if (str)
 	{
-		obj->tstr = ft_memalloc(sizeof(t_str));
-		obj->tstr->str = str;
-		obj->tstr->next = NULL;
-		obj->head_tstr = obj->tstr;
-		while (gnl_with_newline(0, &str) > 0)
+		lemin->tstr = ft_memalloc(sizeof(t_str));
+		lemin->tstr->str = str;
+		lemin->tstr->next = NULL;
+		lemin->head_tstr = lemin->tstr;
+		while (gnl_with_newline(fd, &str) > 0)
 		{
 			temp = ft_memalloc(sizeof(t_str));
 			temp->str = str;
 			temp->next = NULL;
-			obj->tstr->next = temp;
-			obj->tstr = temp;
+			lemin->tstr->next = temp;
+			lemin->tstr = temp;
 		}
-		obj->tstr = obj->head_tstr;
+		lemin->tstr = lemin->head_tstr;
 		return (1);
 	}
 	return (print_error(NO_INPUT));
@@ -116,31 +116,31 @@ void			create_tlink_node(t_room *linked_rm, t_room *room, char repeat)
 **	later
 */
 
-int				create_troom_node(t_obj *obj, int code)
+int				create_troom_node(t_lemin *lemin, int code)
 {
 	int			i;
 
 	i = 0;
-	obj->room = ft_memalloc(sizeof(t_room));
-	while (obj->tstr->str[i] && obj->tstr->str[i] != ' ')
+	lemin->room = ft_memalloc(sizeof(t_room));
+	while (lemin->tstr->str[i] && lemin->tstr->str[i] != ' ')
 		++i;
-	obj->room->name = ft_strndup(obj->tstr->str, i);
-	obj->room->coord_x = ft_atoi(&obj->tstr->str[i + 1]);
-	while (obj->tstr->str[i + 1] && ft_isdigit(obj->tstr->str[i + 1]))
+	lemin->room->name = ft_strndup(lemin->tstr->str, i);
+	lemin->room->coord_x = ft_atoi(&lemin->tstr->str[i + 1]);
+	while (lemin->tstr->str[i + 1] && ft_isdigit(lemin->tstr->str[i + 1]))
 		++i;
-	obj->room->coord_y = ft_atoi(&obj->tstr->str[i + 2]);
-	if (obj->head_rm == NULL)
-		obj->head_rm = obj->room;
+	lemin->room->coord_y = ft_atoi(&lemin->tstr->str[i + 2]);
+	if (lemin->head_rm == NULL)
+		lemin->head_rm = lemin->room;
 	else
 	{
-		obj->tail_rm->next = obj->room;
-		obj->room->prev = obj->tail_rm;
+		lemin->tail_rm->next = lemin->room;
+		lemin->room->prev = lemin->tail_rm;
 	}
 	if (code == 2)
-		obj->start_room = obj->room;
+		lemin->start_room = lemin->room;
 	else if (code == 3)
-		obj->end_room = obj->room;
-	obj->tail_rm = obj->room;
+		lemin->end_room = lemin->room;
+	lemin->tail_rm = lemin->room;
 	return (1);
 }
 
@@ -153,30 +153,30 @@ int				create_troom_node(t_obj *obj, int code)
 **	make a t_link node for room1 to room2 and for room2 to room1
 */
 
-int				create_tlink_lst(t_obj *obj)
+int				create_tlink_lst(t_lemin *lemin)
 {
-	t_room		*temp;
-	t_room		*temp2;
+	t_room		*t1;
+	t_room		*t2;
 
-	if (obj->flags != 3 || !obj->head_lnk_str)
-		obj->flags != 3 ? print_error(NO_CMMND) : print_error(NO_LINK);
-	obj->tstr = obj->head_lnk_str;
-	while (obj->tstr != NULL && validate_link(obj->tstr->str))
-		obj->tstr = obj->tstr->next;
-	if (obj->tstr != NULL && !validate_link(obj->tstr->str))
+	if (lemin->flags != 3 || !lemin->head_lnk_str)
+		lemin->flags != 3 ? print_error(NO_CMMND) : print_error(NO_LINK);
+	lemin->tstr = lemin->head_lnk_str;
+	while (lemin->tstr != NULL && validate_link(lemin->tstr->str))
+		lemin->tstr = lemin->tstr->next;
+	if (lemin->tstr != NULL && !validate_link(lemin->tstr->str))
 		return (print_error(BAD_LINK));
-	obj->tstr = obj->head_lnk_str;
-	while (obj->tstr != NULL)
+	lemin->tstr = lemin->head_lnk_str;
+	while (lemin->tstr != NULL)
 	{
-		if (obj->tstr->str[0] != '#')
+		if (lemin->tstr->str[0] != '#')
 		{
-			temp = get_troom_by_name(obj->tstr->str, obj);
-			temp2 = get_troom_by_name(ft_strchr(obj->tstr->str, '-') + 1, obj);
-			if (!temp || !temp2 || temp == temp2)
+			t1 = get_troom_by_name(lemin->tstr->str, lemin);
+			t2 = get_troom_by_name(ft_strchr(lemin->tstr->str, '-') + 1, lemin);
+			if (!t1 || !t2 || t1 == t2)
 				return (print_error(NO_RM_LINK));
-			create_tlink_node(temp, temp2, 1);
+			create_tlink_node(t1, t2, 1);
 		}
-		obj->tstr = obj->tstr->next;
+		lemin->tstr = lemin->tstr->next;
 	}
 	return (1);
 }
@@ -189,29 +189,29 @@ int				create_tlink_lst(t_obj *obj)
 **	a t_room node is created.
 */
 
-int				create_troom_lst(t_obj *obj)
+int				create_troom_lst(t_lemin *lemin)
 {
 	int			val_str_code;
 
-	validate_first_line(obj);
-	val_str_code = 0;
-	while (obj->tstr && obj->tstr->next != NULL)
+	validate_first_line(lemin);
+	while (lemin->tstr && lemin->tstr->next != NULL)
 	{
-		val_str_code = validate_string_list(obj->tstr->str, obj);
+		val_str_code = validate_string_list(lemin->tstr->str, lemin);
 		if (val_str_code == 1)
-			create_troom_node(obj, val_str_code);
+			create_troom_node(lemin, val_str_code);
 		else if (val_str_code == 2 || val_str_code == 3)
 		{
-			obj->tstr = obj->tstr->next;
-			validate_string_list(obj->tstr->str, obj) == 1 ?\
-			create_troom_node(obj, val_str_code) : print_error(BAD_CMMND);
+			lemin->tstr = lemin->tstr->next;
+			validate_string_list(lemin->tstr->str, lemin) == 1
+				? create_troom_node(lemin, val_str_code)
+				: print_error(BAD_CMMND);
 		}
 		else if (val_str_code == 5)
 		{
-			obj->head_lnk_str = obj->tstr;
+			lemin->head_lnk_str = lemin->tstr;
 			return (1);
 		}
-		obj->tstr = obj->tstr->next;
+		lemin->tstr = lemin->tstr->next;
 	}
 	return (1);
 }
