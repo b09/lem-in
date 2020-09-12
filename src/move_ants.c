@@ -6,7 +6,7 @@
 /*   By: bprado <bprado@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/25 18:53:18 by bprado        #+#    #+#                 */
-/*   Updated: 2020/09/11 20:37:01 by macbook       ########   odam.nl         */
+/*   Updated: 2020/09/12 13:51:02 by macbook       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,21 @@ static void		move_ant(t_lemin *lemin, t_room *start, t_ant *next)
 	}
 }
 
+static t_ant	*create_ant(int *ant_id)
+{
+	t_ant		*ant;
+	
+	ant = ft_memalloc(sizeof(t_ant));
+	ant->ant_id = *ant_id;
+	*ant_id += 1;
+	return (ant);
+}
+
 void			print_move_ants
 	(t_lemin *lemin, t_room *room, t_link *links_startroom)
 {
-	t_ant	*ant;
-	int		ant_id;
+	t_ant		*ant;
+	int			ant_id;
 
 	ant_id = 1;
 	links_startroom = lemin->start_room->head_lnk;
@@ -52,12 +62,7 @@ void			print_move_ants
 			{
 				if ((ant_id - 1) < lemin->ants
 					&& (lemin->ants - (ant_id - 1) >= room->path->min_ants))
-				{
-					ant = ft_memalloc(sizeof(t_ant));
-					// error if NULL?
-					ant->ant_id = ant_id;
-					ant_id += 1;
-				}
+					ant = create_ant(&ant_id);
 				else
 					ant = NULL;
 				move_ant(lemin, room, ant);
